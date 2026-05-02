@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Crimson Dawn Survivors</title>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <canvas id="game-canvas" aria-label="Campo de jogo"></canvas>
+
+      <div class="hud-layer">
+        <div class="hud-row top-row">
+          <div class="panel stat-panel">
+            <div class="label-row">
+              <span>Vida</span>
+              <span id="health-text">100 / 100</span>
+            </div>
+            <div class="bar health-bar">
+              <div id="health-fill" class="bar-fill"></div>
+            </div>
+          </div>
+
+          <div class="panel timer-panel">
+            <span class="timer-label">Noite</span>
+            <strong id="timer-text">00:00</strong>
+          </div>
+        </div>
+
+        <div class="hud-row bottom-row">
+          <div class="panel xp-panel">
+            <div class="label-row">
+              <span id="level-text">Nvl 1</span>
+              <span id="xp-text">0 / 10 XP</span>
+            </div>
+            <div class="bar xp-bar">
+              <div id="xp-fill" class="bar-fill"></div>
+            </div>
+          </div>
+
+          <div class="panel loadout-panel">
+            <span class="section-title">Armas</span>
+            <div id="weapon-list" class="weapon-list"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="menu-screen" class="screen visible">
+        <div class="screen-card hero-card">
+          <p class="eyebrow">Crimson Dawn</p>
+          <h1>Survivors</h1>
+          <p class="screen-copy">
+            Sobreviva por 30 minutos, evolua armas e atravesse a maré de criaturas.
+          </p>
+          <button id="start-button" class="primary-button">Jogar</button>
+          <p class="hint">Movimento: WASD ou setas. Pausa: ESC.</p>
+        </div>
+      </div>
+
+      <div id="levelup-screen" class="screen hidden">
+        <div class="screen-card overlay-card">
+          <p class="eyebrow">Level Up</p>
+          <h2>Escolha um aprimoramento</h2>
+          <div id="levelup-options" class="option-grid"></div>
+        </div>
+      </div>
+
+      <div id="pause-screen" class="screen hidden">
+        <div class="screen-card overlay-card">
+          <p class="eyebrow">Pausado</p>
+          <h2>A escuridão aguarda</h2>
+          <p class="screen-copy">Pressione ESC para continuar.</p>
+        </div>
+      </div>
+
+      <div id="gameover-screen" class="screen hidden">
+        <div class="screen-card overlay-card">
+          <p id="gameover-kicker" class="eyebrow">Fim de jogo</p>
+          <h2 id="gameover-title">Você caiu.</h2>
+          <p id="gameover-summary" class="screen-copy"></p>
+          <div id="gameover-stats" class="stats-grid"></div>
+          <button id="restart-button" class="primary-button">Jogar novamente</button>
+        </div>
+      </div>
+    </div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>
