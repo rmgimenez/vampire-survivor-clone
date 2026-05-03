@@ -351,16 +351,16 @@ function uniqueValidIds(ids) {
 
 function buildRarityWeights(run) {
   const progress = Math.min(
-    2.8,
-    run.elapsed / 600 + run.kills / 180 + run.level / 16 + (run.win ? 0.6 : 0),
+    2.4,
+    run.elapsed / 700 + run.kills / 260 + run.level / 20 + (run.win ? 0.35 : 0),
   );
 
   return {
-    common: Math.max(16, 58 - progress * 16),
-    uncommon: 28 + progress * 8,
-    rare: 10 + progress * 6,
-    epic: 4 + progress * 2,
-    legendary: progress < 1.25 ? 0 : 0.4 + (progress - 1.25) * 1.2,
+    common: Math.max(24, 62 - progress * 18),
+    uncommon: 25 + progress * 7,
+    rare: 9 + progress * 4,
+    epic: 3 + progress * 1.5,
+    legendary: progress < 1.7 ? 0 : 0.18 + (progress - 1.7) * 0.55,
   };
 }
 
@@ -370,10 +370,10 @@ function getUnlockCount(run, availableCount) {
   }
 
   let unlockCount = 1;
-  const strongRun =
-    run.win || run.level >= 10 || run.kills >= 90 || run.elapsed >= 9 * 60;
+  const standoutRun =
+    run.win || run.level >= 18 || run.kills >= 180 || run.elapsed >= 15 * 60;
 
-  if (strongRun && availableCount > 1) {
+  if (standoutRun && availableCount > 1) {
     unlockCount += 1;
   }
 

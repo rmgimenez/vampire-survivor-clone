@@ -317,11 +317,6 @@ export class Game {
           if (thornsDmg > 0) {
             this.damageEnemy(enemy, thornsDmg);
           }
-
-          // Life Steal — heal on taking damage (extra life steal effect)
-          if (this.player.lifeSteal > 0) {
-            this.player.heal(this.player.lifeSteal);
-          }
         }
       }
     }
@@ -494,7 +489,15 @@ export class Game {
   }
 
   getChestDropChance(enemy) {
-    return enemy.isBoss ? 0.35 : 0.01;
+    if (enemy.isBoss) {
+      return 1;
+    }
+
+    if (enemy.isElite) {
+      return 0.65;
+    }
+
+    return 0.006;
   }
 
   createChestPickup(enemy) {

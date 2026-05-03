@@ -75,7 +75,7 @@ export class Player {
     const damage = Math.max(1, Math.round(reduced));
     this.health = Math.max(0, this.health - damage);
     this.totalDamageTaken += damage;
-    this.invulnerableTimer = 0.55;
+    this.invulnerableTimer = 0.42;
 
     // Thorns — reflect damage back to the nearest enemy
     if (this.thorns > 0) {

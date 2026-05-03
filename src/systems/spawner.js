@@ -44,9 +44,9 @@ export class Spawner {
       }
     }
 
-    // Elite spawns — mini-bosses every ~2 minutes
+    // Elite spawns — mini-bosses start early and accelerate the run pace
     this.eliteTimer -= dt;
-    if (this.eliteTimer <= 0 && game.elapsed > 120) {
+    if (this.eliteTimer <= 0 && game.elapsed > 90) {
       const eliteType = pickEliteType(game.elapsed);
       const eliteConfig = ENEMY_TYPES[eliteType];
       if (eliteConfig) {
@@ -55,8 +55,8 @@ export class Spawner {
       this.eliteTimer = getEliteInterval(game.elapsed);
     }
 
-    // Boss spawns every 8 minutes
-    const currentMilestone = Math.floor(game.elapsed / 480);
+    // Boss spawns every 6 minutes
+    const currentMilestone = Math.floor(game.elapsed / 360);
     if (currentMilestone > 0 && !this.bossMilestones.has(currentMilestone)) {
       this.bossMilestones.add(currentMilestone);
       this.spawnBoss(game);
@@ -67,7 +67,7 @@ export class Spawner {
     const enemyConfig = ENEMY_TYPES[enemyType];
     const position = this.getSpawnPosition(game);
     const difficulty = getDifficulty(game.elapsed, game.stats.kills);
-    const scale = 1 + Math.max(0, difficulty - 1) * 0.28;
+    const scale = 1 + Math.max(0, difficulty - 1) * 0.34;
 
     game.enemies.push(
       new Enemy({
@@ -101,11 +101,11 @@ export class Spawner {
     });
 
     // Boosted stats
-    elite.maxHealth = Math.round(elite.maxHealth * 2.5);
+    elite.maxHealth = Math.round(elite.maxHealth * 2.8);
     elite.health = elite.maxHealth;
-    elite.damage = Math.round(elite.damage * 1.6);
-    elite.xp = Math.round(elite.xp * 4);
-    elite.radius = elite.baseRadius * 1.4;
+    elite.damage = Math.round(elite.damage * 1.9);
+    elite.xp = Math.round(elite.xp * 5);
+    elite.radius = elite.baseRadius * 1.45;
     elite.color = "#ff6b9d"; // pink glow for elites
     game.enemies.push(elite);
   }

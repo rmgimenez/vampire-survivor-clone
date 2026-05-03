@@ -109,7 +109,7 @@ const RARITY_TIERS = [
     id: "common",
     labelKey: "levelup.rarity.common",
     className: "common",
-    weight: 50,
+    weight: 56,
     bonusLevels: 0,
     multiplier: 1,
   },
@@ -117,41 +117,41 @@ const RARITY_TIERS = [
     id: "uncommon",
     labelKey: "levelup.rarity.uncommon",
     className: "uncommon",
-    weight: 28,
-    bonusLevels: 1,
-    multiplier: 1.15,
+    weight: 26,
+    bonusLevels: 0,
+    multiplier: 1.08,
   },
   {
     id: "rare",
     labelKey: "levelup.rarity.rare",
     className: "rare",
-    weight: 14,
-    bonusLevels: 2,
-    multiplier: 1.35,
+    weight: 12,
+    bonusLevels: 1,
+    multiplier: 1.18,
   },
   {
     id: "epic",
     labelKey: "levelup.rarity.epic",
     className: "epic",
-    weight: 8,
-    bonusLevels: 3,
-    multiplier: 1.6,
+    weight: 6,
+    bonusLevels: 2,
+    multiplier: 1.3,
   },
 ];
 
 function pickRarity(level) {
-  const progress = Math.min(1, level / 40);
+  const progress = Math.min(1, level / 50);
   const weights = RARITY_TIERS.map((tier) => {
     let weight = tier.weight;
 
     if (tier.id === "rare") {
-      weight += progress * 8;
+      weight += progress * 6;
     }
     if (tier.id === "epic") {
-      weight += progress * 4;
+      weight += progress * 3;
     }
     if (tier.id === "common") {
-      weight -= progress * 10;
+      weight -= progress * 8;
     }
 
     return {
@@ -174,7 +174,7 @@ function pickRarity(level) {
 }
 
 export function getXpForLevel(level) {
-  return Math.floor(10 + (level - 1) * 8 + Math.pow(level - 1, 1.32) * 4);
+  return Math.floor(12 + (level - 1) * 10 + Math.pow(level - 1, 1.48) * 5.2);
 }
 
 export function gainExperience(game, amount) {
