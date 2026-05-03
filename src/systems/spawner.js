@@ -1,12 +1,12 @@
-import { ENEMY_TYPES, SCREEN_SAFE_SPAWN_MARGIN } from '../config.js';
-import { Enemy } from '../entities/enemy.js';
+import { ENEMY_TYPES, SCREEN_SAFE_SPAWN_MARGIN } from "../config.js";
+import { Enemy } from "../entities/enemy.js";
 import {
   chooseEnemyType,
   getDifficulty,
   getEnemyCap,
   getGroupSize,
   getSpawnInterval,
-} from './waves.js';
+} from "./waves.js";
 
 export class Spawner {
   constructor() {
@@ -20,20 +20,25 @@ export class Spawner {
   }
 
   update(dt, game) {
-    if (game.enemies.length < getEnemyCap(game.elapsed)) {
+    const kills = game.stats.kills;
+
+    if (game.enemies.length < getEnemyCap(game.elapsed, kills)) {
       this.spawnTimer -= dt;
 
       if (this.spawnTimer <= 0) {
-        const count = getGroupSize(game.elapsed);
+        const count = getGroupSize(game.elapsed, kills);
         for (let index = 0; index < count; index += 1) {
-          this.spawnEnemy(game, chooseEnemyType(game.elapsed, Math.random()));
+          this.spawnEnemy(
+            game,
+            chooseEnemyType(game.elapsed, Math.random(), kills),
+          );
         }
 
-        this.spawnTimer = getSpawnInterval(game.elapsed);
+        this.spawnTimer = getSpawnInterval(game.elapsed, kills);
       }
     }
 
-    const currentMilestone = Math.floor(game.elapsed / 600);
+    const currentMilestone = Math.floor(game.elapsed / 480);
     if (currentMilestone > 0 && !this.bossMilestones.has(currentMilestone)) {
       this.bossMilestones.add(currentMilestone);
       this.spawnBoss(game);
@@ -43,7 +48,7 @@ export class Spawner {
   spawnEnemy(game, enemyType) {
     const enemyConfig = ENEMY_TYPES[enemyType];
     const position = this.getSpawnPosition(game);
-    const difficulty = getDifficulty(game.elapsed);
+    const difficulty = getDifficulty(game.elapsed, game.stats.kills);
     const scale = 1 + Math.max(0, difficulty - 1) * 0.28;
 
     game.enemies.push(

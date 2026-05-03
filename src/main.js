@@ -93,6 +93,10 @@ document.getElementById("menu-button")?.addEventListener("click", () => {
   game.showMenu();
 });
 
+document.getElementById("giveup-button")?.addEventListener("click", () => {
+  game.finishRun(false);
+});
+
 document.getElementById("shop-button")?.addEventListener("click", () => {
   const profile = getActiveProfile();
   if (profile) shopUI.show(profile);

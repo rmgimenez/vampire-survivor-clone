@@ -52,6 +52,7 @@ const translations = {
     "pause.eyebrow": "Pausado",
     "pause.title": "A escuridão aguarda",
     "pause.hint": "Pressione ESC para continuar.",
+    "pause.giveUp": "Desistir da run",
 
     // Fim de jogo
     "gameover.win.kicker": "Vitória",
@@ -199,6 +200,7 @@ const translations = {
     "pause.eyebrow": "Paused",
     "pause.title": "Darkness awaits",
     "pause.hint": "Press ESC to continue.",
+    "pause.giveUp": "Give up the run",
 
     // Game Over
     "gameover.win.kicker": "Victory",
