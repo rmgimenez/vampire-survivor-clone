@@ -1,19 +1,20 @@
-import { GAME_DURATION, GAME_STATES } from './config.js';
-import { Player } from './entities/player.js';
-import { XpOrb } from './entities/xpOrb.js';
-import { Renderer } from './renderer.js';
-import { aabbOverlap, circlesOverlap } from './systems/collision.js';
+import { GAME_DURATION, GAME_STATES } from "./config.js";
+import { Player } from "./entities/player.js";
+import { XpOrb } from "./entities/xpOrb.js";
+import { calculateCoins, saveRun } from "./profile.js";
+import { Renderer } from "./renderer.js";
+import { aabbOverlap, circlesOverlap } from "./systems/collision.js";
 import {
   applyUpgrade,
   buildLevelUpChoices,
   gainExperience,
   getXpForLevel,
-} from './systems/experience.js';
-import { Spawner } from './systems/spawner.js';
-import { Aura } from './weapons/aura.js';
-import { Knife } from './weapons/knife.js';
-import { MagicWand } from './weapons/magicWand.js';
-import { Whip } from './weapons/whip.js';
+} from "./systems/experience.js";
+import { Spawner } from "./systems/spawner.js";
+import { Aura } from "./weapons/aura.js";
+import { Knife } from "./weapons/knife.js";
+import { MagicWand } from "./weapons/magicWand.js";
+import { Whip } from "./weapons/whip.js";
 
 export class Game {
   constructor({ canvas, context, input, hud, levelUpUI, gameOverUI }) {
@@ -22,12 +23,15 @@ export class Game {
     this.hud = hud;
     this.levelUpUI = levelUpUI;
     this.gameOverUI = gameOverUI;
-    this.menuScreen = document.getElementById('menu-screen');
-    this.pauseScreen = document.getElementById('pause-screen');
+    this.menuScreen = document.getElementById("menu-screen");
+    this.pauseScreen = document.getElementById("pause-screen");
     this.spawner = new Spawner();
 
     this.state = GAME_STATES.MENU;
     this.nextEnemyId = 1;
+
+    /** @type {import('./profile.js').Profile|null} */
+    this.profile = null;
 
     this.player = null;
     this.enemies = [];
@@ -41,12 +45,29 @@ export class Game {
       kills: 0,
       damageDone: 0,
       levelUps: 0,
+      coinsEarned: 0,
     };
   }
 
   startNewRun() {
     this.player = new Player(0, 0);
     this.player.nextLevelXp = getXpForLevel(this.player.level);
+
+    // Apply permanent meta-upgrades from the active profile
+    if (this.profile) {
+      const meta = this.profile.metaUpgrades;
+      const healthBonus = (meta.startHealth ?? 0) * 20;
+      this.player.maxHealth += healthBonus;
+      this.player.health = this.player.maxHealth;
+      this.player.damageMultiplier *= 1 + (meta.startDamage ?? 0) * 0.1;
+      this.player.moveSpeed *= 1 + (meta.startSpeed ?? 0) * 0.08;
+      this.player.cooldownMultiplier *= Math.max(
+        0.2,
+        1 - (meta.startCooldown ?? 0) * 0.08,
+      );
+      this.player.recovery += (meta.recovery ?? 0) * 0.3;
+    }
+
     this.enemies = [];
     this.projectiles = [];
     this.pickups = [];
@@ -54,7 +75,7 @@ export class Game {
     this.weapons = [new MagicWand()];
     this.elapsed = 0;
     this.pendingLevelUps = 0;
-    this.stats = { kills: 0, damageDone: 0, levelUps: 0 };
+    this.stats = { kills: 0, damageDone: 0, levelUps: 0, coinsEarned: 0 };
     this.nextEnemyId = 1;
     this.state = GAME_STATES.PLAYING;
     this.spawner.reset();
@@ -66,7 +87,7 @@ export class Game {
   }
 
   update(dt) {
-    if (this.input.consumePressed('Escape')) {
+    if (this.input.consumePressed("Escape")) {
       if (this.state === GAME_STATES.PLAYING) {
         this.state = GAME_STATES.PAUSED;
         this.showOverlay(this.pauseScreen);
@@ -128,7 +149,9 @@ export class Game {
   }
 
   render() {
-    const camera = this.player ? { x: this.player.x, y: this.player.y } : { x: 0, y: 0 };
+    const camera = this.player
+      ? { x: this.player.x, y: this.player.y }
+      : { x: 0, y: 0 };
 
     this.renderer.clear();
     this.renderer.drawBackground(camera, this.elapsed);
@@ -209,7 +232,9 @@ export class Game {
   }
 
   cleanupEntities() {
-    this.projectiles = this.projectiles.filter((projectile) => !projectile.destroyed);
+    this.projectiles = this.projectiles.filter(
+      (projectile) => !projectile.destroyed,
+    );
     this.enemies = this.enemies.filter((enemy) => !enemy.markedForRemoval);
     this.pickups = this.pickups.filter((pickup) => !pickup.markedForRemoval);
   }
@@ -249,6 +274,30 @@ export class Game {
 
   finishRun(win) {
     this.state = win ? GAME_STATES.WIN : GAME_STATES.GAME_OVER;
+
+    // Calculate and persist coins
+    let coinsEarned = 0;
+    if (this.profile) {
+      const coinBonusLevel = this.profile.metaUpgrades.coinBonus ?? 0;
+      coinsEarned = calculateCoins(
+        this.stats.kills,
+        this.elapsed,
+        win,
+        coinBonusLevel,
+      );
+      const updatedProfile = saveRun(this.profile.id, {
+        win,
+        elapsed: this.elapsed,
+        kills: this.stats.kills,
+        level: this.player.level,
+        damageDone: Math.round(this.stats.damageDone),
+        levelUps: this.stats.levelUps,
+        coinsEarned,
+      });
+      if (updatedProfile) this.profile = updatedProfile;
+    }
+    this.stats.coinsEarned = coinsEarned;
+
     this.levelUpUI.hide();
     this.hideOverlay(this.pauseScreen);
     this.gameOverUI.show({
@@ -256,6 +305,8 @@ export class Game {
       elapsed: this.elapsed,
       stats: this.stats,
       playerLevel: this.player.level,
+      coinsEarned,
+      totalCoins: this.profile?.coins ?? 0,
     });
   }
 
@@ -280,13 +331,13 @@ export class Game {
 
   createWeapon(type) {
     switch (type) {
-      case 'aura':
+      case "aura":
         return new Aura();
-      case 'knife':
+      case "knife":
         return new Knife();
-      case 'whip':
+      case "whip":
         return new Whip();
-      case 'magicWand':
+      case "magicWand":
       default:
         return new MagicWand();
     }
@@ -338,12 +389,12 @@ export class Game {
   }
 
   showOverlay(element) {
-    element.classList.remove('hidden');
-    element.classList.add('visible');
+    element.classList.remove("hidden");
+    element.classList.add("visible");
   }
 
   hideOverlay(element) {
-    element.classList.add('hidden');
-    element.classList.remove('visible');
+    element.classList.add("hidden");
+    element.classList.remove("visible");
   }
 }
