@@ -10,12 +10,13 @@ export class LevelUpUI {
     for (const choice of choices) {
       const button = document.createElement("button");
       button.type = "button";
-      button.className = "option-card";
+      button.className = `option-card ${choice.rarityClass ?? ""}`;
       button.innerHTML = `
-        <div class="option-card-header">
+        <div class="option-card-meta">
           <span class="option-type">${choice.typeLabel ?? ""}</span>
-          <strong>${choice.title}</strong>
+          <span class="option-rarity ${choice.rarityClass ?? ""}">${choice.rarityLabel ?? ""}</span>
         </div>
+        <strong>${choice.title}</strong>
         <p>${choice.description}</p>
       `;
       button.addEventListener("click", () => onSelect(choice));

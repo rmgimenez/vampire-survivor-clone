@@ -12,6 +12,7 @@ export class HUD {
   constructor() {
     this.healthText = document.getElementById("health-text");
     this.healthFill = document.getElementById("health-fill");
+    this.killsText = document.getElementById("kills-text");
     this.timerText = document.getElementById("timer-text");
     this.levelText = document.getElementById("level-text");
     this.xpText = document.getElementById("xp-text");
@@ -36,6 +37,7 @@ export class HUD {
     this.levelText.textContent = `${t("hud.level")} ${player.level}`;
     this.xpText.textContent = `${Math.floor(player.experience)} / ${player.nextLevelXp} XP`;
     this.xpFill.style.width = `${xpRatio}%`;
+    this.killsText.textContent = String(game.stats.kills ?? 0);
 
     this.weaponList.innerHTML = "";
     for (const weapon of game.weapons) {

@@ -7,6 +7,7 @@ const translations = {
 
     // HUD
     "hud.health": "Vida",
+    "hud.kills": "Abates",
     "hud.night": "Noite",
     "hud.weapons": "Armas",
     "hud.level": "Nvl",
@@ -42,6 +43,10 @@ const translations = {
     "levelup.type.passive.offense": "Ofensivo",
     "levelup.type.passive.defense": "Defensivo",
     "levelup.type.passive.utility": "Utilitário",
+    "levelup.rarity.common": "Comum",
+    "levelup.rarity.uncommon": "Incomum",
+    "levelup.rarity.rare": "Raro",
+    "levelup.rarity.epic": "Épico",
 
     // Pausa
     "pause.eyebrow": "Pausado",
@@ -149,6 +154,7 @@ const translations = {
 
     // HUD
     "hud.health": "Health",
+    "hud.kills": "Kills",
     "hud.night": "Night",
     "hud.weapons": "Weapons",
     "hud.level": "Lvl",
@@ -184,6 +190,10 @@ const translations = {
     "levelup.type.passive.offense": "Offensive",
     "levelup.type.passive.defense": "Defensive",
     "levelup.type.passive.utility": "Utility",
+    "levelup.rarity.common": "Common",
+    "levelup.rarity.uncommon": "Uncommon",
+    "levelup.rarity.rare": "Rare",
+    "levelup.rarity.epic": "Epic",
 
     // Pause
     "pause.eyebrow": "Paused",
