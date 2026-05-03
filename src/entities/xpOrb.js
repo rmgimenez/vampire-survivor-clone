@@ -3,6 +3,7 @@ export class XpOrb {
     this.x = x;
     this.y = y;
     this.radius = 7;
+    this.kind = 'xp';
     this.value = value;
     this.markedForRemoval = false;
   }

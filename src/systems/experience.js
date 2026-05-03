@@ -44,6 +44,17 @@ const PASSIVE_UPGRADES = [
   },
 ];
 
+const PASSIVE_CATEGORY = {
+  health: "defense",
+  damage: "offense",
+  speed: "utility",
+  cooldown: "defense",
+  area: "offense",
+  recovery: "defense",
+  amount: "offense",
+  magnet: "utility",
+};
+
 export function getXpForLevel(level) {
   return Math.floor(10 + (level - 1) * 8 + Math.pow(level - 1, 1.32) * 4);
 }
@@ -76,9 +87,12 @@ export function buildLevelUpChoices(game, count = 3) {
   const pool = [];
 
   for (const passive of PASSIVE_UPGRADES) {
+    const category = PASSIVE_CATEGORY[passive.id] ?? "utility";
     pool.push({
       ...passive,
       kind: "passive",
+      category,
+      typeLabel: t(`levelup.type.passive.${category}`),
       title: t(`passive.${passive.id}.title`),
       description: t(`passive.${passive.id}.desc`),
     });
@@ -86,6 +100,7 @@ export function buildLevelUpChoices(game, count = 3) {
 
   for (const weaponType of Object.keys(WEAPON_LABELS)) {
     const weapon = game.getWeapon(weaponType);
+    const weaponTypeLabel = t("levelup.type.weapon");
 
     if (!weapon) {
       const name = t(`weapon.${weaponType}.name`);
@@ -93,6 +108,7 @@ export function buildLevelUpChoices(game, count = 3) {
         id: `unlock-${weaponType}`,
         kind: "unlock-weapon",
         weaponType,
+        typeLabel: weaponTypeLabel,
         title: name,
         description: t("weapon.unlock.desc", { name }),
       });
@@ -105,6 +121,7 @@ export function buildLevelUpChoices(game, count = 3) {
         id: `upgrade-${weaponType}`,
         kind: "upgrade-weapon",
         weaponType,
+        typeLabel: weaponTypeLabel,
         title: `${name} +1`,
         description: t("weapon.upgrade.desc", {
           name,

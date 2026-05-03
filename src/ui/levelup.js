@@ -11,7 +11,13 @@ export class LevelUpUI {
       const button = document.createElement('button');
       button.type = 'button';
       button.className = 'option-card';
-      button.innerHTML = `<strong>${choice.title}</strong><p>${choice.description}</p>`;
+      button.innerHTML = `
+        <div class="option-card-header">
+          <span class="option-type">${choice.typeLabel ?? ''}</span>
+          <strong>${choice.title}</strong>
+        </div>
+        <p>${choice.description}</p>
+      `;
       button.addEventListener('click', () => onSelect(choice));
       this.container.append(button);
     }

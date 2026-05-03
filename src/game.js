@@ -1,6 +1,7 @@
 import { GAME_DURATION, GAME_STATES } from "./config.js";
 import { Player } from "./entities/player.js";
 import { XpOrb } from "./entities/xpOrb.js";
+import { ChestPickup } from "./entities/chestPickup.js";
 import { calculateCoins, saveRun } from "./profile.js";
 import { Renderer } from "./renderer.js";
 import { aabbOverlap, circlesOverlap } from "./systems/collision.js";
@@ -228,7 +229,14 @@ export class Game {
     for (const pickup of this.pickups) {
       if (!pickup.markedForRemoval && circlesOverlap(this.player, pickup, 8)) {
         pickup.markedForRemoval = true;
-        gainExperience(this, pickup.value);
+
+        if (pickup.kind === "xp") {
+          gainExperience(this, pickup.value);
+        } else if (pickup.kind === "health") {
+          this.player.heal(pickup.value);
+        } else if (pickup.kind === "upgrade") {
+          this.pendingLevelUps += 1;
+        }
       }
     }
   }
@@ -261,7 +269,36 @@ export class Game {
       enemy.markedForRemoval = true;
       this.stats.kills += 1;
       this.pickups.push(new XpOrb(enemy.x, enemy.y, enemy.xp));
+
+      if (Math.random() < this.getChestDropChance(enemy)) {
+        this.pickups.push(this.createChestPickup(enemy));
+      }
     }
+  }
+
+  getChestDropChance(enemy) {
+    return enemy.isBoss ? 0.35 : 0.01;
+  }
+
+  createChestPickup(enemy) {
+    const kinds = ["xp", "health", "upgrade"];
+    const kind = kinds[Math.floor(Math.random() * kinds.length)];
+    const baseValue = Math.max(5, Math.round(enemy.xp * 3));
+
+    if (kind === "xp") {
+      return new ChestPickup(enemy.x, enemy.y, "xp", baseValue + 3);
+    }
+
+    if (kind === "health") {
+      return new ChestPickup(
+        enemy.x,
+        enemy.y,
+        "health",
+        Math.round(12 + enemy.xp * 2.5),
+      );
+    }
+
+    return new ChestPickup(enemy.x, enemy.y, "upgrade", 1);
   }
 
   presentLevelUp() {

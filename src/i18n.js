@@ -38,6 +38,10 @@ const translations = {
     // Level Up
     "levelup.eyebrow": "Level Up",
     "levelup.title": "Escolha um aprimoramento",
+    "levelup.type.weapon": "Arma",
+    "levelup.type.passive.offense": "Ofensivo",
+    "levelup.type.passive.defense": "Defensivo",
+    "levelup.type.passive.utility": "Utilitário",
 
     // Pausa
     "pause.eyebrow": "Pausado",
@@ -176,6 +180,10 @@ const translations = {
     // Level Up
     "levelup.eyebrow": "Level Up",
     "levelup.title": "Choose an upgrade",
+    "levelup.type.weapon": "Weapon",
+    "levelup.type.passive.offense": "Offensive",
+    "levelup.type.passive.defense": "Defensive",
+    "levelup.type.passive.utility": "Utility",
 
     // Pause
     "pause.eyebrow": "Paused",
