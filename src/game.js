@@ -12,8 +12,18 @@ import {
 } from "./systems/experience.js";
 import { Spawner } from "./systems/spawner.js";
 import { Aura } from "./weapons/aura.js";
+import { ChaosOrb } from "./weapons/chaosOrb.js";
+import { Crossbow } from "./weapons/crossbow.js";
+import { Fireball } from "./weapons/fireball.js";
+import { IceShard } from "./weapons/iceShard.js";
 import { Knife } from "./weapons/knife.js";
 import { MagicWand } from "./weapons/magicWand.js";
+import { Meteor } from "./weapons/meteor.js";
+import { ShadowBlade } from "./weapons/shadowBlade.js";
+import { Shuriken } from "./weapons/shuriken.js";
+import { SoulSiphon } from "./weapons/soulSiphon.js";
+import { Thunderbolt } from "./weapons/thunderbolt.js";
+import { Vortex } from "./weapons/vortex.js";
 import { Whip } from "./weapons/whip.js";
 
 export class Game {
@@ -333,8 +343,28 @@ export class Game {
     switch (type) {
       case "aura":
         return new Aura();
+      case "chaosOrb":
+        return new ChaosOrb();
+      case "crossbow":
+        return new Crossbow();
+      case "fireball":
+        return new Fireball();
+      case "iceShard":
+        return new IceShard();
       case "knife":
         return new Knife();
+      case "meteor":
+        return new Meteor();
+      case "shadowBlade":
+        return new ShadowBlade();
+      case "shuriken":
+        return new Shuriken();
+      case "soulSiphon":
+        return new SoulSiphon();
+      case "thunderbolt":
+        return new Thunderbolt();
+      case "vortex":
+        return new Vortex();
       case "whip":
         return new Whip();
       case "magicWand":
