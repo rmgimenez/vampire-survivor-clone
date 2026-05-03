@@ -32,6 +32,9 @@ export class Player {
     this.freezeChance = 0; // % chance to freeze on hit (0-0.7)
     this.bountyMultiplier = 0; // bonus XP multiplier (e.g. 0.25 = +25%)
     this.armor = 0; // flat damage reduction
+    this.damageTakenMultiplier = 1;
+    this.reviveCharges = 0;
+    this.reviveHealRatio = 0.4;
   }
 
   update(dt, input) {
@@ -67,7 +70,8 @@ export class Player {
     }
 
     // Armor reduces incoming damage
-    const reduced = Math.max(0, amount - this.armor);
+    const scaledAmount = amount * this.damageTakenMultiplier;
+    const reduced = Math.max(0, scaledAmount - this.armor);
     const damage = Math.max(1, Math.round(reduced));
     this.health = Math.max(0, this.health - damage);
     this.totalDamageTaken += damage;

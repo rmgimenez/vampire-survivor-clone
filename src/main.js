@@ -1,7 +1,8 @@
 import { Game } from "./game.js";
 import { InputController } from "./input.js";
 import { applyStaticTranslations, toggleLanguage } from "./i18n.js";
-import { getActiveProfile } from "./profile.js";
+import { getActiveProfile, updateSelectedCards } from "./profile.js";
+import { CardSelectionUI } from "./ui/cardSelection.js";
 import { GameOverUI } from "./ui/gameover.js";
 import { HistoryUI } from "./ui/historyUI.js";
 import { HUD } from "./ui/hud.js";
@@ -35,6 +36,27 @@ const game = new Game({
   gameOverUI,
 });
 
+const cardSelectionUI = new CardSelectionUI({
+  onConfirm(selectedCardIds) {
+    const activeProfile = getActiveProfile();
+    if (!activeProfile) {
+      return;
+    }
+
+    const updatedProfile =
+      updateSelectedCards(activeProfile.id, selectedCardIds) ?? activeProfile;
+    game.profile = updatedProfile;
+    cardSelectionUI.hide();
+    refreshMenuProfile();
+    game.startNewRun(updatedProfile.cards.selected);
+  },
+  onBack() {
+    cardSelectionUI.hide();
+    refreshMenuProfile();
+    game.showMenu();
+  },
+});
+
 // ── Profile selection ────────────────────────────────────────────────────────
 const profileSelectUI = new ProfileSelectUI(() => {
   profileSelectUI.hide();
@@ -65,6 +87,19 @@ function refreshMenuProfile() {
   if (coinsEl) coinsEl.textContent = `${profile.coins} 🪙`;
 }
 
+function openCardSelection() {
+  const profile = getActiveProfile();
+  if (!profile) {
+    return;
+  }
+
+  game.profile = profile;
+  game.gameOverUI.hide();
+  game.hideOverlay(game.pauseScreen);
+  game.hideOverlay(game.menuScreen);
+  cardSelectionUI.show(profile);
+}
+
 // ── Language toggle ──────────────────────────────────────────────────────────
 for (const btn of document.querySelectorAll(".lang-toggle-btn")) {
   btn.addEventListener("click", () => {
@@ -79,15 +114,15 @@ for (const btn of document.querySelectorAll(".lang-toggle-btn")) {
 
 // ── Button bindings ───────────────────────────────────────────────────────────
 document.getElementById("start-button")?.addEventListener("click", () => {
-  game.startNewRun();
+  openCardSelection();
 });
 
 document.getElementById("restart-button")?.addEventListener("click", () => {
-  game.profile = getActiveProfile();
-  game.startNewRun();
+  openCardSelection();
 });
 
 document.getElementById("menu-button")?.addEventListener("click", () => {
+  cardSelectionUI.hide();
   game.profile = getActiveProfile();
   refreshMenuProfile();
   game.showMenu();
@@ -108,6 +143,7 @@ document.getElementById("history-button")?.addEventListener("click", () => {
 });
 
 document.getElementById("change-profile-btn")?.addEventListener("click", () => {
+  cardSelectionUI.hide();
   game.hideOverlay(game.menuScreen);
   profileSelectUI.show();
 });

@@ -553,6 +553,168 @@ h2 {
   margin: 18px 0 10px;
 }
 
+/* ══ CARD SELECTION ════════════════════════════════════════════════════════ */
+
+.card-select-screen {
+  width: min(1040px, 100%);
+}
+
+.card-select-toolbar {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin: 14px 0 10px;
+}
+
+.card-select-chip {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--muted);
+  font-size: 0.76rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.card-select-hint {
+  margin: 0 0 16px;
+  color: #e8dbc0;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  max-height: 52vh;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.run-card {
+  text-align: left;
+  padding: 16px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text);
+  cursor: pointer;
+  transition:
+    transform 150ms ease,
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease,
+    opacity 150ms ease;
+}
+
+.run-card:hover:not(:disabled),
+.run-card:focus-visible:not(:disabled) {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.18);
+}
+
+.run-card.is-selected {
+  border-color: rgba(248, 195, 92, 0.75);
+  box-shadow: 0 0 0 1px rgba(248, 195, 92, 0.35);
+  background: rgba(248, 195, 92, 0.09);
+}
+
+.run-card.is-locked {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.run-card-head {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.run-card-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  background: rgba(255, 255, 255, 0.08);
+  flex-shrink: 0;
+}
+
+.run-card-meta {
+  min-width: 0;
+}
+
+.run-card-title {
+  display: block;
+  margin-bottom: 6px;
+}
+
+.run-card-badges {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.run-card-kind,
+.run-card-rarity {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.run-card-kind.card-kind-blessing {
+  background: rgba(78, 205, 196, 0.12);
+  border: 1px solid rgba(78, 205, 196, 0.2);
+  color: #71f0cf;
+}
+
+.run-card-kind.card-kind-curse,
+.run-card.card-kind-curse {
+  background: rgba(241, 104, 95, 0.12);
+  border-color: rgba(241, 104, 95, 0.28);
+  color: #ff9d92;
+}
+
+.run-card-desc {
+  margin: 14px 0 16px;
+  min-height: 60px;
+  color: #e8dbc0;
+  line-height: 1.45;
+}
+
+.run-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.run-card-state {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.run-card-state.is-on {
+  color: #8ec07c;
+}
+
+.run-card-picked {
+  color: var(--gold);
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.card-select-actions {
+  margin-top: 20px;
+}
+
 .secondary-button {
   padding: 12px 24px;
   background: rgba(255, 255, 255, 0.07);
@@ -665,6 +827,95 @@ h2 {
   justify-content: center;
   margin-top: 18px;
   flex-wrap: wrap;
+}
+
+.unlocked-card-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.unlocked-card-chip {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  padding: 14px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.unlocked-card-icon {
+  width: 42px;
+  height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.unlocked-card-copy strong {
+  display: block;
+  margin-bottom: 4px;
+}
+
+.unlocked-card-copy span {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.rarity-common {
+  border-color: rgba(213, 196, 161, 0.3);
+}
+
+.rarity-uncommon {
+  border-color: rgba(142, 192, 124, 0.34);
+}
+
+.rarity-rare {
+  border-color: rgba(131, 165, 152, 0.38);
+}
+
+.rarity-epic {
+  border-color: rgba(211, 134, 155, 0.42);
+}
+
+.rarity-legendary {
+  border-color: rgba(248, 195, 92, 0.52);
+  box-shadow: 0 0 0 1px rgba(248, 195, 92, 0.12);
+}
+
+.run-card-rarity.rarity-common,
+.unlocked-card-chip.rarity-common {
+  background: rgba(213, 196, 161, 0.1);
+}
+
+.run-card-rarity.rarity-uncommon,
+.unlocked-card-chip.rarity-uncommon {
+  background: rgba(142, 192, 124, 0.12);
+}
+
+.run-card-rarity.rarity-rare,
+.unlocked-card-chip.rarity-rare {
+  background: rgba(131, 165, 152, 0.12);
+}
+
+.run-card-rarity.rarity-epic,
+.unlocked-card-chip.rarity-epic {
+  background: rgba(211, 134, 155, 0.14);
+}
+
+.run-card-rarity.rarity-legendary,
+.unlocked-card-chip.rarity-legendary {
+  background: linear-gradient(
+    135deg,
+    rgba(248, 195, 92, 0.2),
+    rgba(115, 216, 227, 0.14)
+  );
 }
 
 .enemy-breakdown-panel {

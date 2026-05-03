@@ -36,6 +36,78 @@ const translations = {
     "menu.changeProfile": "Trocar perfil",
     "menu.hint": "Movimento: WASD ou setas. Pausa: ESC.",
 
+    // Cartas
+    "cards.eyebrow": "Cartas",
+    "cards.title": "Escolha até 3 cartas",
+    "cards.subtitle":
+      "Você desbloqueia cartas ao concluir runs. Equipe até 3 antes de sair para a próxima noite.",
+    "cards.backBtn": "Voltar",
+    "cards.startBtn": "Iniciar run",
+    "cards.startWithout": "Iniciar sem cartas",
+    "cards.collection": "Coleção: {count}/{total}",
+    "cards.selection": "Selecionadas: {count}/{max}",
+    "cards.chooseHint":
+      "Clique em uma carta desbloqueada para equipar ou remover.",
+    "cards.empty":
+      "Ainda não há cartas desbloqueadas. Termine runs para começar a montar seu grimório.",
+    "cards.locked": "Bloqueada",
+    "cards.unlocked": "Desbloqueada",
+    "cards.rewardsTitle": "Novas cartas",
+    "cards.rewardsCopy":
+      "Essas cartas agora podem ser escolhidas antes da próxima run.",
+    "cards.type.blessing": "Bênção",
+    "cards.type.curse": "Maldição",
+    "cards.rarity.common": "Comum",
+    "cards.rarity.uncommon": "Incomum",
+    "cards.rarity.rare": "Rara",
+    "cards.rarity.epic": "Épica",
+    "cards.rarity.legendary": "Lendária",
+    "cards.ironWill.title": "Vontade de Ferro",
+    "cards.ironWill.desc": "+24 de vida máxima e cura imediata equivalente.",
+    "cards.swiftBoots.title": "Botas do Vendaval",
+    "cards.swiftBoots.desc": "+12% de velocidade de movimento.",
+    "cards.emberStone.title": "Pedra de Brasa",
+    "cards.emberStone.desc":
+      "+10% de dano. Com Fireball: Fireball ganha +1 nível e +8% de explosão.",
+    "cards.magnetShard.title": "Fragmento Magnético",
+    "cards.magnetShard.desc": "+28% de alcance para coletar orbes.",
+    "cards.clockworkHeart.title": "Coração Mecânico",
+    "cards.clockworkHeart.desc": "-8% de cooldown global.",
+    "cards.hunterSigil.title": "Sigilo do Caçador",
+    "cards.hunterSigil.desc": "+9% de chance de crítico.",
+    "cards.platedHide.title": "Pele Revestida",
+    "cards.platedHide.desc": "+2 de armadura.",
+    "cards.volleyRune.title": "Runa de Rajada",
+    "cards.volleyRune.desc":
+      "+1 projétil. Com Crossbow + Shuriken: ambas ganham +1 nível e +6% de crítico.",
+    "cards.soulLantern.title": "Lanterna de Almas",
+    "cards.soulLantern.desc":
+      "+35% de XP por abate e +0.25 de regeneração. Com Soul Siphon: +3 roubo de vida e +1 nível.",
+    "cards.frostRelic.title": "Relíquia do Inverno",
+    "cards.frostRelic.desc":
+      "+12% de congelamento e +8% de área. Com Ice Shard: Ice Shard ganha +1 nível.",
+    "cards.thornEmblem.title": "Emblema de Espinhos",
+    "cards.thornEmblem.desc": "+6 espinhos e +10 de vida máxima.",
+    "cards.bloodChalice.title": "Cálice Rubro",
+    "cards.bloodChalice.desc": "+4 roubo de vida por abate e +12% de dano.",
+    "cards.phoenixFeather.title": "Pena da Fênix",
+    "cards.phoenixFeather.desc": "Revive 1 vez com 45% da vida máxima.",
+    "cards.glassCannon.title": "Canhão de Vidro",
+    "cards.glassCannon.desc":
+      "+28% de dano e +8% de crítico, mas -26 de vida máxima. Com Crossbow: +1 nível e crítico mais forte.",
+    "cards.greedBrand.title": "Marca da Ganância",
+    "cards.greedBrand.desc":
+      "+55% de XP e +20% de coleta, mas -12% de velocidade.",
+    "cards.doomClock.title": "Relógio da Ruína",
+    "cards.doomClock.desc":
+      "-18% de cooldown e +1 projétil, mas você sofre +25% de dano.",
+    "cards.astralCrown.title": "Coroa Astral",
+    "cards.astralCrown.desc":
+      "+1 projétil, +8% de crítico e -10% de cooldown. Com Magic Wand + Thunderbolt: ambas ganham +1 nível e +10% de dano.",
+    "cards.worldRoot.title": "Raiz do Mundo",
+    "cards.worldRoot.desc":
+      "+18% de área, +0.45 de regeneração e +2 de armadura. Com Aura + Vortex: ambas ganham +1 nível e +4 espinhos.",
+
     // Level Up
     "levelup.eyebrow": "Level Up",
     "levelup.title": "Escolha um aprimoramento",
@@ -230,6 +302,76 @@ const translations = {
     "menu.historyBtn": "📜 History",
     "menu.changeProfile": "Switch profile",
     "menu.hint": "Movement: WASD or arrows. Pause: ESC.",
+
+    // Cards
+    "cards.eyebrow": "Cards",
+    "cards.title": "Choose up to 3 cards",
+    "cards.subtitle":
+      "You unlock cards by finishing runs. Equip up to 3 before heading into the next night.",
+    "cards.backBtn": "Back",
+    "cards.startBtn": "Start run",
+    "cards.startWithout": "Start without cards",
+    "cards.collection": "Collection: {count}/{total}",
+    "cards.selection": "Selected: {count}/{max}",
+    "cards.chooseHint": "Click an unlocked card to equip or remove it.",
+    "cards.empty":
+      "No cards unlocked yet. Finish runs to start building your grimoire.",
+    "cards.locked": "Locked",
+    "cards.unlocked": "Unlocked",
+    "cards.rewardsTitle": "New cards",
+    "cards.rewardsCopy": "These cards can now be chosen before your next run.",
+    "cards.type.blessing": "Blessing",
+    "cards.type.curse": "Curse",
+    "cards.rarity.common": "Common",
+    "cards.rarity.uncommon": "Uncommon",
+    "cards.rarity.rare": "Rare",
+    "cards.rarity.epic": "Epic",
+    "cards.rarity.legendary": "Legendary",
+    "cards.ironWill.title": "Iron Will",
+    "cards.ironWill.desc": "+24 max health and matching instant heal.",
+    "cards.swiftBoots.title": "Gale Boots",
+    "cards.swiftBoots.desc": "+12% movement speed.",
+    "cards.emberStone.title": "Ember Stone",
+    "cards.emberStone.desc":
+      "+10% damage. With Fireball: Fireball gains +1 level and +8% explosion chance.",
+    "cards.magnetShard.title": "Magnet Shard",
+    "cards.magnetShard.desc": "+28% pickup range for orbs.",
+    "cards.clockworkHeart.title": "Clockwork Heart",
+    "cards.clockworkHeart.desc": "-8% global cooldown.",
+    "cards.hunterSigil.title": "Hunter Sigil",
+    "cards.hunterSigil.desc": "+9% critical chance.",
+    "cards.platedHide.title": "Plated Hide",
+    "cards.platedHide.desc": "+2 armor.",
+    "cards.volleyRune.title": "Volley Rune",
+    "cards.volleyRune.desc":
+      "+1 projectile. With Crossbow + Shuriken: both gain +1 level and +6% crit.",
+    "cards.soulLantern.title": "Soul Lantern",
+    "cards.soulLantern.desc":
+      "+35% XP per kill and +0.25 regeneration. With Soul Siphon: +3 lifesteal and +1 level.",
+    "cards.frostRelic.title": "Frost Relic",
+    "cards.frostRelic.desc":
+      "+12% freeze chance and +8% area. With Ice Shard: Ice Shard gains +1 level.",
+    "cards.thornEmblem.title": "Thorn Emblem",
+    "cards.thornEmblem.desc": "+6 thorns and +10 max health.",
+    "cards.bloodChalice.title": "Blood Chalice",
+    "cards.bloodChalice.desc": "+4 lifesteal on kill and +12% damage.",
+    "cards.phoenixFeather.title": "Phoenix Feather",
+    "cards.phoenixFeather.desc": "Revive once with 45% max health.",
+    "cards.glassCannon.title": "Glass Cannon",
+    "cards.glassCannon.desc":
+      "+28% damage and +8% crit, but -26 max health. With Crossbow: +1 level and stronger crits.",
+    "cards.greedBrand.title": "Greed Brand",
+    "cards.greedBrand.desc":
+      "+55% XP and +20% pickup range, but -12% movement speed.",
+    "cards.doomClock.title": "Doom Clock",
+    "cards.doomClock.desc":
+      "-18% cooldown and +1 projectile, but you take +25% damage.",
+    "cards.astralCrown.title": "Astral Crown",
+    "cards.astralCrown.desc":
+      "+1 projectile, +8% crit and -10% cooldown. With Magic Wand + Thunderbolt: both gain +1 level and +10% damage.",
+    "cards.worldRoot.title": "World Root",
+    "cards.worldRoot.desc":
+      "+18% area, +0.45 regeneration and +2 armor. With Aura + Vortex: both gain +1 level and +4 thorns.",
 
     // Level Up
     "levelup.eyebrow": "Level Up",

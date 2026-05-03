@@ -143,6 +143,40 @@
         </div>
       </div>
 
+      <!-- ══ CARD SELECTION ══════════════════════════════════════════════════ -->
+      <div id="card-select-screen" class="screen hidden">
+        <div class="screen-card card-select-screen">
+          <p class="eyebrow" data-i18n="cards.eyebrow">Cartas</p>
+          <h2 data-i18n="cards.title">Escolha até 3 cartas</h2>
+          <p class="screen-copy" data-i18n="cards.subtitle">
+            Você desbloqueia cartas ao concluir runs. Equipe até 3 antes de sair
+            para a próxima noite.
+          </p>
+          <div class="card-select-toolbar">
+            <span id="card-select-collection" class="card-select-chip"></span>
+            <span id="card-select-status" class="card-select-chip"></span>
+          </div>
+          <p id="card-select-hint" class="card-select-hint"></p>
+          <div id="card-select-grid" class="card-grid"></div>
+          <div class="gameover-buttons card-select-actions">
+            <button
+              id="card-select-back"
+              class="secondary-button"
+              data-i18n="cards.backBtn"
+            >
+              Voltar
+            </button>
+            <button
+              id="card-select-start"
+              class="primary-button"
+              data-i18n="cards.startBtn"
+            >
+              Iniciar run
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- ══ LEVEL UP ════════════════════════════════════════════════════════ -->
       <div id="levelup-screen" class="screen hidden">
         <div class="screen-card overlay-card">

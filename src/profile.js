@@ -1,3 +1,9 @@
+import {
+  normalizeSelectedCardIds,
+  normalizeUnlockedCardIds,
+  rollCardUnlocks,
+} from "./cards.js";
+
 const STORAGE_KEY = "cds_data";
 
 function generateId() {
@@ -15,13 +21,63 @@ function blankMeta() {
   };
 }
 
+function blankCards() {
+  return {
+    unlocked: [],
+    selected: [],
+  };
+}
+
+function normalizeProfile(profile) {
+  const cards = blankCards();
+  cards.unlocked = normalizeUnlockedCardIds(profile?.cards?.unlocked ?? []);
+  cards.selected = normalizeSelectedCardIds(
+    profile?.cards?.selected ?? [],
+    cards.unlocked,
+  );
+
+  return {
+    id: profile.id,
+    name: String(profile.name ?? "")
+      .trim()
+      .slice(0, 24),
+    coins: profile.coins ?? 0,
+    totalCoins: profile.totalCoins ?? 0,
+    metaUpgrades: {
+      ...blankMeta(),
+      ...(profile.metaUpgrades ?? {}),
+    },
+    cards,
+    runs: Array.isArray(profile.runs)
+      ? profile.runs.map((run) => ({
+          ...run,
+          killsByType: { ...(run.killsByType ?? {}) },
+        }))
+      : [],
+  };
+}
+
+function normalizeData(data) {
+  const profiles = Array.isArray(data?.profiles)
+    ? data.profiles.map(normalizeProfile)
+    : [];
+  const activeId = profiles.some((profile) => profile.id === data?.activeId)
+    ? data.activeId
+    : (profiles[0]?.id ?? null);
+
+  return {
+    profiles,
+    activeId,
+  };
+}
+
 function load() {
   try {
-    return (
+    return normalizeData(
       JSON.parse(localStorage.getItem(STORAGE_KEY)) || {
         profiles: [],
         activeId: null,
-      }
+      },
     );
   } catch {
     return { profiles: [], activeId: null };
@@ -30,7 +86,7 @@ function load() {
 
 function persist(data) {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(normalizeData(data)));
   } catch {
     // storage quota exceeded — ignore
   }
@@ -53,6 +109,7 @@ export function createProfile(name) {
     coins: 0,
     totalCoins: 0,
     metaUpgrades: blankMeta(),
+    cards: blankCards(),
     runs: [],
   };
   data.profiles.push(profile);
@@ -80,7 +137,7 @@ export function deleteProfile(id) {
 
 /**
  * Saves a completed run and credits coins to the profile.
- * Returns the updated profile, or null if profile not found.
+ * Returns the updated profile and any unlocked cards, or null if profile not found.
  */
 export function saveRun(profileId, run) {
   const data = load();
@@ -94,8 +151,36 @@ export function saveRun(profileId, run) {
   if (profile.runs.length > 50) profile.runs.length = 50;
   profile.coins += run.coinsEarned;
   profile.totalCoins += run.coinsEarned;
+  const unlockedCardIds = rollCardUnlocks(profile.cards.unlocked, run);
+  if (unlockedCardIds.length > 0) {
+    profile.cards.unlocked = normalizeUnlockedCardIds([
+      ...profile.cards.unlocked,
+      ...unlockedCardIds,
+    ]);
+  }
+  profile.cards.selected = normalizeSelectedCardIds(
+    profile.cards.selected,
+    profile.cards.unlocked,
+  );
   persist(data);
-  return data.profiles.find((p) => p.id === profileId);
+  return {
+    profile: data.profiles.find((p) => p.id === profileId) ?? null,
+    unlockedCardIds,
+  };
+}
+
+export function updateSelectedCards(profileId, selectedCardIds) {
+  const data = load();
+  const profile = data.profiles.find((p) => p.id === profileId);
+  if (!profile) return null;
+
+  profile.cards.selected = normalizeSelectedCardIds(
+    selectedCardIds,
+    profile.cards.unlocked,
+  );
+
+  persist(data);
+  return data.profiles.find((p) => p.id === profileId) ?? null;
 }
 
 /**

@@ -1,4 +1,5 @@
 import { GAME_DURATION, GAME_STATES } from "./config.js";
+import { applyCardWeaponSynergies, applySelectedCards } from "./cards.js";
 import { Player } from "./entities/player.js";
 import { XpOrb } from "./entities/xpOrb.js";
 import { ChestPickup } from "./entities/chestPickup.js";
@@ -103,9 +104,12 @@ export class Game {
     this.elapsed = 0;
     this.pendingLevelUps = 0;
     this.stats = createRunStats();
+    this.selectedCardIds = [];
+    this.latestUnlockedCardIds = [];
+    this.activeCards = [];
   }
 
-  startNewRun() {
+  startNewRun(selectedCardIds = this.profile?.cards?.selected ?? []) {
     this.player = new Player(0, 0);
     this.player.nextLevelXp = getXpForLevel(this.player.level);
 
@@ -137,6 +141,12 @@ export class Game {
     this.state = GAME_STATES.PLAYING;
     this.spawner.reset();
     this._appliedSynergies = new Set();
+    this._appliedCardWeaponSynergies = new Set();
+    this.selectedCardIds = [...selectedCardIds];
+    this.latestUnlockedCardIds = [];
+    this.activeCards = applySelectedCards(this, this.selectedCardIds);
+    applySynergies(this);
+    applyCardWeaponSynergies(this);
     this.hideOverlay(this.menuScreen);
     this.hideOverlay(this.pauseScreen);
     this.levelUpUI.hide();
@@ -194,8 +204,20 @@ export class Game {
     this.cleanupEntities();
 
     if (this.player.health <= 0) {
-      this.finishRun(false);
-      return;
+      if (this.player.reviveCharges > 0) {
+        this.player.reviveCharges -= 1;
+        this.player.health = Math.max(
+          1,
+          Math.round(this.player.maxHealth * this.player.reviveHealRatio),
+        );
+        this.player.invulnerableTimer = Math.max(
+          this.player.invulnerableTimer,
+          1.4,
+        );
+      } else {
+        this.finishRun(false);
+        return;
+      }
     }
 
     if (this.pendingLevelUps > 0) {
@@ -534,6 +556,7 @@ export class Game {
 
     // Calculate and persist coins
     let coinsEarned = 0;
+    let unlockedCardIds = [];
     if (this.profile) {
       const coinBonusLevel = this.profile.metaUpgrades.coinBonus ?? 0;
       coinsEarned = calculateCoins(
@@ -542,7 +565,7 @@ export class Game {
         win,
         coinBonusLevel,
       );
-      const updatedProfile = saveRun(this.profile.id, {
+      const saveResult = saveRun(this.profile.id, {
         win,
         elapsed: this.elapsed,
         kills: this.stats.kills,
@@ -552,9 +575,13 @@ export class Game {
         levelUps: this.stats.levelUps,
         coinsEarned,
       });
-      if (updatedProfile) this.profile = updatedProfile;
+      if (saveResult?.profile) {
+        this.profile = saveResult.profile;
+        unlockedCardIds = saveResult.unlockedCardIds ?? [];
+      }
     }
     this.stats.coinsEarned = coinsEarned;
+    this.latestUnlockedCardIds = unlockedCardIds;
 
     this.levelUpUI.hide();
     this.hideOverlay(this.pauseScreen);
@@ -565,6 +592,7 @@ export class Game {
       playerLevel: this.player.level,
       coinsEarned,
       totalCoins: this.profile?.coins ?? 0,
+      unlockedCardIds,
     });
   }
 
@@ -579,6 +607,7 @@ export class Game {
 
     this.weapons.push(this.createWeapon(type));
     applySynergies(this);
+    applyCardWeaponSynergies(this);
   }
 
   levelUpWeapon(type) {
@@ -586,6 +615,7 @@ export class Game {
     if (weapon) {
       weapon.levelUp();
       applySynergies(this);
+      applyCardWeaponSynergies(this);
     }
   }
 
