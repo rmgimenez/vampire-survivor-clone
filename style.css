@@ -250,7 +250,10 @@ h2 {
   color: var(--text);
   background: rgba(248, 195, 92, 0.08);
   border: 1px solid rgba(248, 195, 92, 0.18);
-  transition: transform 180ms ease, background 180ms ease, border-color 180ms ease,
+  transition:
+    transform 180ms ease,
+    background 180ms ease,
+    border-color 180ms ease,
     box-shadow 180ms ease;
 }
 
