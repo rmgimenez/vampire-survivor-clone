@@ -11,6 +11,10 @@ export const GAME_DURATION = 30 * 60;
 export const WORLD_TILE_SIZE = 96;
 export const SCREEN_SAFE_SPAWN_MARGIN = 220;
 
+function enemySprite(name) {
+  return new URL(`../assets/enemies/${name}.svg`, import.meta.url).href;
+}
+
 export const ENEMY_TYPES = {
   bat: {
     type: "bat",
@@ -21,6 +25,8 @@ export const ENEMY_TYPES = {
     damage: 8,
     color: "#f56d5e",
     xp: 1,
+    sprite: enemySprite("bat"),
+    spriteScale: 2.9,
   },
   zombie: {
     type: "zombie",
@@ -31,6 +37,8 @@ export const ENEMY_TYPES = {
     damage: 12,
     color: "#8ba85c",
     xp: 2,
+    sprite: enemySprite("zombie"),
+    spriteScale: 2.45,
   },
   skeleton: {
     type: "skeleton",
@@ -41,6 +49,44 @@ export const ENEMY_TYPES = {
     damage: 16,
     color: "#ddd4bf",
     xp: 2,
+    sprite: enemySprite("skeleton"),
+    spriteScale: 2.6,
+  },
+  hound: {
+    type: "hound",
+    name: "Hound",
+    radius: 14,
+    speed: 146,
+    health: 26,
+    damage: 11,
+    color: "#d97762",
+    xp: 2,
+    sprite: enemySprite("hound"),
+    spriteScale: 2.7,
+  },
+  wraith: {
+    type: "wraith",
+    name: "Wraith",
+    radius: 16,
+    speed: 112,
+    health: 40,
+    damage: 14,
+    color: "#73d8e3",
+    xp: 3,
+    sprite: enemySprite("wraith"),
+    spriteScale: 2.75,
+  },
+  brute: {
+    type: "brute",
+    name: "Brute",
+    radius: 24,
+    speed: 58,
+    health: 88,
+    damage: 20,
+    color: "#8d6254",
+    xp: 4,
+    sprite: enemySprite("brute"),
+    spriteScale: 2.35,
   },
   boss: {
     type: "boss",
@@ -51,6 +97,8 @@ export const ENEMY_TYPES = {
     damage: 28,
     color: "#f8c35c",
     xp: 18,
+    sprite: enemySprite("boss"),
+    spriteScale: 3.1,
     isBoss: true,
   },
 };

@@ -1,4 +1,5 @@
 import { t } from "../i18n.js";
+import { buildKillBreakdownGrid } from "./killBreakdown.js";
 
 export class GameOverUI {
   constructor() {
@@ -8,6 +9,14 @@ export class GameOverUI {
     this.summary = document.getElementById("gameover-summary");
     this.stats = document.getElementById("gameover-stats");
     this.coinsRow = document.getElementById("gameover-coins-row");
+    this.killBreakdown = document.getElementById("gameover-kills-breakdown");
+
+    if (!this.killBreakdown && this.stats) {
+      this.killBreakdown = document.createElement("section");
+      this.killBreakdown.id = "gameover-kills-breakdown";
+      this.killBreakdown.className = "enemy-breakdown-panel";
+      this.stats.insertAdjacentElement("afterend", this.killBreakdown);
+    }
   }
 
   show({ win, elapsed, stats, playerLevel, coinsEarned, totalCoins }) {
@@ -37,6 +46,13 @@ export class GameOverUI {
       item.className = "stat-card";
       item.innerHTML = `<strong>${value}</strong><span>${label}</span>`;
       this.stats.append(item);
+    }
+
+    if (this.killBreakdown) {
+      this.killBreakdown.innerHTML = `
+        <p class="enemy-breakdown-title">${t("gameover.typesTitle")}</p>
+        ${buildKillBreakdownGrid(stats.killsByType, t("gameover.typesEmpty"))}
+      `;
     }
 
     if (this.coinsRow) {

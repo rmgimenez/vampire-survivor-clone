@@ -629,6 +629,61 @@ h2 {
   flex-wrap: wrap;
 }
 
+.enemy-breakdown-panel {
+  margin-top: 20px;
+  padding: 18px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.enemy-breakdown-title {
+  margin: 0 0 14px;
+  color: var(--muted);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-size: 0.74rem;
+}
+
+.enemy-breakdown-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.enemy-breakdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: rgba(248, 195, 92, 0.08);
+  border: 1px solid rgba(248, 195, 92, 0.14);
+}
+
+.enemy-breakdown-icon {
+  width: 44px;
+  height: 44px;
+  object-fit: contain;
+  flex-shrink: 0;
+}
+
+.enemy-breakdown-copy {
+  min-width: 0;
+}
+
+.enemy-breakdown-count {
+  display: block;
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.enemy-breakdown-name {
+  display: block;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 /* ══ SHOP ════════════════════════════════════════════════════════════════════ */
 
 .shop-card-screen {
@@ -816,13 +871,75 @@ h2 {
   background: rgba(241, 104, 95, 0.03);
 }
 
+.history-row.run-win,
+.history-row.run-loss {
+  border-bottom: none;
+}
+
 .run-badge {
   font-size: 1rem;
 }
 
+.history-breakdown {
+  padding: 0 16px 12px 48px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.history-breakdown:last-child {
+  border-bottom: none;
+}
+
+.history-breakdown-label {
+  display: block;
+  margin-bottom: 8px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.history-breakdown-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.history-breakdown-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.history-breakdown-pill strong {
+  font-size: 0.86rem;
+}
+
+.history-breakdown-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.history-breakdown-empty {
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
 @media (max-width: 700px) {
+  .enemy-breakdown-grid {
+    grid-template-columns: 1fr;
+  }
+
   .history-row {
     grid-template-columns: 2rem 1fr 1fr 1fr;
+  }
+
+  .history-breakdown {
+    padding: 0 12px 12px;
   }
 
   .history-row > span:nth-child(6),

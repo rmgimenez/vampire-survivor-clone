@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="wraithBody" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#dcffff"/>
+      <stop offset="1" stop-color="#59bccd"/>
+    </linearGradient>
+  </defs>
+  <path d="M32 10c11 0 20 9 20 20 0 6-2 9-4 13-2 3-1 8-4 8-3 0-3-5-6-5s-4 8-7 8-3-7-6-7-3 6-6 6c-4 0-2-7-4-10-2-4-3-7-3-12 0-12 9-21 20-21Z" fill="url(#wraithBody)" opacity=".94"/>
+  <circle cx="26" cy="28" r="3.2" fill="#173541"/>
+  <circle cx="38" cy="28" r="3.2" fill="#173541"/>
+  <path d="M25 38c4 3 10 3 14 0" stroke="#173541" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M18 18c4-5 10-8 14-8-7 4-10 10-10 16" stroke="#efffff" stroke-width="2" stroke-linecap="round" fill="none" opacity=".65"/>
+</svg>

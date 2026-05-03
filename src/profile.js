@@ -88,6 +88,7 @@ export function saveRun(profileId, run) {
   if (!profile) return null;
   profile.runs.unshift({
     ...run,
+    killsByType: { ...(run.killsByType ?? {}) },
     date: new Date().toLocaleDateString("pt-BR"),
   });
   if (profile.runs.length > 50) profile.runs.length = 50;

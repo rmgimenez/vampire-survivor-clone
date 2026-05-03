@@ -1,4 +1,5 @@
 import { t } from "../i18n.js";
+import { buildKillBreakdownPills } from "./killBreakdown.js";
 
 export class HistoryUI {
   constructor(onClose) {
@@ -78,6 +79,16 @@ export class HistoryUI {
         <span>+${run.coinsEarned} 🪙</span>
       `;
       this.listEl.append(row);
+
+      const breakdown = document.createElement("div");
+      breakdown.className = "history-breakdown";
+      breakdown.innerHTML = `
+        <span class="history-breakdown-label">${t("history.runTypes")}</span>
+        <div class="history-breakdown-tags">
+          ${buildKillBreakdownPills(run.killsByType, t("history.runTypesEmpty"))}
+        </div>
+      `;
+      this.listEl.append(breakdown);
     }
   }
 }

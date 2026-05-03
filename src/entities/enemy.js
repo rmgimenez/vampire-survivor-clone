@@ -12,6 +12,8 @@ export class Enemy {
     this.health = this.maxHealth;
     this.damage = Math.round(config.damage * Math.min(2.4, 0.9 + scale * 0.18));
     this.color = config.color;
+    this.sprite = config.sprite ?? null;
+    this.spriteScale = config.spriteScale ?? 2.6;
     this.xp = Math.round(config.xp * Math.max(1, scale * 0.7));
     this.isBoss = Boolean(config.isBoss);
     this.contactCooldown = 0;

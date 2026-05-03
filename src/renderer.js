@@ -4,6 +4,7 @@ export class Renderer {
   constructor(canvas, context) {
     this.canvas = canvas;
     this.context = context;
+    this.enemySprites = new Map();
     this.resize();
   }
 
@@ -93,11 +94,53 @@ export class Renderer {
   drawEntity(entity, camera, colorOverride) {
     const screen = this.worldToScreen(entity.x, entity.y, camera);
     const color = colorOverride || entity.color;
-    this.drawCircle(screen.x, screen.y, entity.radius, color);
+    const sprite = entity.sprite ? this.getEnemySprite(entity.sprite) : null;
+
+    if (sprite?.complete && sprite.naturalWidth > 0) {
+      const ctx = this.context;
+      const size = entity.radius * entity.spriteScale * 2;
+
+      ctx.save();
+      ctx.globalAlpha = 0.28;
+      ctx.fillStyle = color;
+      ctx.beginPath();
+      ctx.ellipse(
+        screen.x,
+        screen.y + entity.radius * 0.7,
+        entity.radius * 0.82,
+        Math.max(4, entity.radius * 0.42),
+        0,
+        0,
+        Math.PI * 2,
+      );
+      ctx.fill();
+      ctx.restore();
+
+      ctx.drawImage(
+        sprite,
+        screen.x - size / 2,
+        screen.y - size / 2,
+        size,
+        size,
+      );
+    } else {
+      this.drawCircle(screen.x, screen.y, entity.radius, color);
+    }
 
     if (entity.hitFlashTimer > 0) {
       this.drawCircle(screen.x, screen.y, entity.radius + 4, "#fff2c7", 0.25);
     }
+  }
+
+  getEnemySprite(spriteUrl) {
+    if (!this.enemySprites.has(spriteUrl)) {
+      const image = new Image();
+      image.decoding = "async";
+      image.src = spriteUrl;
+      this.enemySprites.set(spriteUrl, image);
+    }
+
+    return this.enemySprites.get(spriteUrl) ?? null;
   }
 
   drawPlayer(player, camera) {

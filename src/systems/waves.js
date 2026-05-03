@@ -13,45 +13,85 @@ export function getEnemyCap(elapsed, kills = 0) {
 }
 
 export function chooseEnemyType(elapsed, randomValue, kills = 0) {
-  const minute = elapsed / 60;
+  const pressure = elapsed / 60 + kills / 90;
 
-  if (minute < 2) {
+  if (pressure < 2) {
     return randomValue < 0.72 ? "bat" : "zombie";
   }
 
-  if (minute < 5) {
-    if (randomValue < 0.45) {
+  if (pressure < 4.5) {
+    if (randomValue < 0.34) {
       return "bat";
     }
 
-    if (randomValue < 0.85) {
+    if (randomValue < 0.63) {
       return "zombie";
     }
 
-    return "skeleton";
+    if (randomValue < 0.86) {
+      return "skeleton";
+    }
+
+    return "hound";
   }
 
-  if (minute < 10) {
-    if (randomValue < 0.3) {
+  if (pressure < 8) {
+    if (randomValue < 0.18) {
       return "bat";
     }
 
-    if (randomValue < 0.7) {
+    if (randomValue < 0.42) {
       return "zombie";
     }
 
+    if (randomValue < 0.63) {
+      return "skeleton";
+    }
+
+    if (randomValue < 0.84) {
+      return "hound";
+    }
+
+    return "wraith";
+  }
+
+  if (pressure < 13) {
+    if (randomValue < 0.14) {
+      return "zombie";
+    }
+
+    if (randomValue < 0.36) {
+      return "skeleton";
+    }
+
+    if (randomValue < 0.58) {
+      return "hound";
+    }
+
+    if (randomValue < 0.82) {
+      return "wraith";
+    }
+
+    return "brute";
+  }
+
+  if (randomValue < 0.12) {
     return "skeleton";
   }
 
-  if (randomValue < 0.2) {
-    return "bat";
+  if (randomValue < 0.32) {
+    return "hound";
   }
 
-  if (randomValue < 0.55) {
-    return "zombie";
+  if (randomValue < 0.57) {
+    return "wraith";
   }
 
-  return "skeleton";
+  if (randomValue < 0.82) {
+    return "brute";
+  }
+
+  return "zombie";
 }
 
 export function getGroupSize(elapsed, kills = 0) {

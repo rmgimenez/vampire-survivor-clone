@@ -27,6 +27,16 @@ import { Thunderbolt } from "./weapons/thunderbolt.js";
 import { Vortex } from "./weapons/vortex.js";
 import { Whip } from "./weapons/whip.js";
 
+function createRunStats() {
+  return {
+    kills: 0,
+    killsByType: {},
+    damageDone: 0,
+    levelUps: 0,
+    coinsEarned: 0,
+  };
+}
+
 export class Game {
   constructor({ canvas, context, input, hud, levelUpUI, gameOverUI }) {
     this.renderer = new Renderer(canvas, context);
@@ -52,12 +62,7 @@ export class Game {
     this.weapons = [];
     this.elapsed = 0;
     this.pendingLevelUps = 0;
-    this.stats = {
-      kills: 0,
-      damageDone: 0,
-      levelUps: 0,
-      coinsEarned: 0,
-    };
+    this.stats = createRunStats();
   }
 
   startNewRun() {
@@ -86,7 +91,7 @@ export class Game {
     this.weapons = [new MagicWand()];
     this.elapsed = 0;
     this.pendingLevelUps = 0;
-    this.stats = { kills: 0, damageDone: 0, levelUps: 0, coinsEarned: 0 };
+    this.stats = createRunStats();
     this.nextEnemyId = 1;
     this.state = GAME_STATES.PLAYING;
     this.spawner.reset();
@@ -268,6 +273,8 @@ export class Game {
     if (defeated) {
       enemy.markedForRemoval = true;
       this.stats.kills += 1;
+      this.stats.killsByType[enemy.type] =
+        (this.stats.killsByType[enemy.type] ?? 0) + 1;
       this.pickups.push(new XpOrb(enemy.x, enemy.y, enemy.xp));
 
       if (Math.random() < this.getChestDropChance(enemy)) {
@@ -336,6 +343,7 @@ export class Game {
         win,
         elapsed: this.elapsed,
         kills: this.stats.kills,
+        killsByType: { ...this.stats.killsByType },
         level: this.player.level,
         damageDone: Math.round(this.stats.damageDone),
         levelUps: this.stats.levelUps,

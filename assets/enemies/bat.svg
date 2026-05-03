@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="batWing" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ff9d88"/>
+      <stop offset="1" stop-color="#b83f38"/>
+    </linearGradient>
+  </defs>
+  <path d="M11 34c6-9 12-13 21-14-4 3-6 8-5 12-5-1-10 0-16 2Z" fill="url(#batWing)" opacity=".92"/>
+  <path d="M53 34c-6-9-12-13-21-14 4 3 6 8 5 12 5-1 10 0 16 2Z" fill="url(#batWing)" opacity=".92"/>
+  <ellipse cx="32" cy="31" rx="10" ry="12" fill="#40151c"/>
+  <ellipse cx="28" cy="29" rx="2" ry="2.4" fill="#ffd8c7"/>
+  <ellipse cx="36" cy="29" rx="2" ry="2.4" fill="#ffd8c7"/>
+  <path d="M27 37c3 2 7 2 10 0" stroke="#ffd8c7" stroke-width="2" stroke-linecap="round" fill="none"/>
+  <path d="M29 43l3-6 3 6" fill="#ffcf8f"/>
+ </svg>
