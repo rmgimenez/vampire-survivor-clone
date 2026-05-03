@@ -467,6 +467,34 @@ export class Game {
       createObstacle(variant, x, y, scale);
     }
 
+    const regionVariants = ["boulder", "pineTall", "pineWide"];
+    const regionGrid = 3;
+    const regionSpacing = 1200;
+
+    for (let gridY = -regionGrid; gridY <= regionGrid; gridY += 1) {
+      for (let gridX = -regionGrid; gridX <= regionGrid; gridX += 1) {
+        if (gridX === 0 && gridY === 0) {
+          continue;
+        }
+
+        const centerX = gridX * regionSpacing;
+        const centerY = gridY * regionSpacing;
+        const obstaclesInRegion = 3 + Math.floor(Math.random() * 3);
+
+        for (let count = 0; count < obstaclesInRegion; count += 1) {
+          const x =
+            centerX + (Math.random() * regionSpacing - regionSpacing / 2) * 0.6;
+          const y =
+            centerY + (Math.random() * regionSpacing - regionSpacing / 2) * 0.6;
+          const scale = 0.85 + Math.random() * 0.3;
+          const variant =
+            regionVariants[Math.floor(Math.random() * regionVariants.length)];
+
+          createObstacle(variant, x, y, scale);
+        }
+      }
+    }
+
     return obstacles;
   }
 

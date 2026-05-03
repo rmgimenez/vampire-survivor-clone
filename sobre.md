@@ -179,6 +179,10 @@ Este documento descreve o escopo completo do projeto. Ao gerar o código, siga e
 
 ---
 
+IMPORTANTE: Após cada resposta do chat, gere 3 opções numeradas de próximos passos, como "Implementar classe Player", "Adicionar sistema de spawn de inimigos", "Criar HUD básico". O usuário escolherá a próxima tarefa a ser implementada. Mantenha o foco em uma tarefa por vez para garantir clareza e organização no desenvolvimento.
+
+---
+
 ## MVP — Ordem de Implementação Sugerida
 
 - [ ] `index.html` com canvas e estrutura base

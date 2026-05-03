@@ -2,6 +2,9 @@ import { Projectile } from "../entities/projectile.js";
 import { Weapon } from "./weapon.js";
 
 const DAMAGE_BY_LEVEL = [16, 20, 24, 28, 34, 40, 48, 60];
+const MAGIC_WAND_SHOT_SOUND = new Audio("./assets/som/tiro-wand.mp3");
+MAGIC_WAND_SHOT_SOUND.preload = "auto";
+MAGIC_WAND_SHOT_SOUND.volume = 0.25;
 
 export class MagicWand extends Weapon {
   constructor() {
@@ -49,6 +52,10 @@ export class MagicWand extends Weapon {
         }),
       );
     }
+
+    const sound = MAGIC_WAND_SHOT_SOUND.cloneNode();
+    sound.volume = 0.25;
+    sound.play().catch(() => {});
 
     this.cooldownTimer = this.getCooldown(game.player);
   }
