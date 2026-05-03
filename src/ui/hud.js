@@ -1,5 +1,6 @@
 import { GAME_DURATION } from "../config.js";
 import { t } from "../i18n.js";
+import { getWaveName } from "../systems/waves.js";
 
 function formatTime(seconds) {
   const clamped = Math.max(0, Math.floor(seconds));
@@ -14,6 +15,7 @@ export class HUD {
     this.healthFill = document.getElementById("health-fill");
     this.killsText = document.getElementById("kills-text");
     this.timerText = document.getElementById("timer-text");
+    this.waveText = document.getElementById("wave-text");
     this.levelText = document.getElementById("level-text");
     this.xpText = document.getElementById("xp-text");
     this.xpFill = document.getElementById("xp-fill");
@@ -34,6 +36,12 @@ export class HUD {
     this.timerText.textContent = formatTime(
       Math.min(game.elapsed, GAME_DURATION),
     );
+
+    // Wave name display
+    if (this.waveText && game.elapsed > 0) {
+      this.waveText.textContent = `⚔ ${getWaveName(game.elapsed)}`;
+    }
+
     this.levelText.textContent = `${t("hud.level")} ${player.level}`;
     this.xpText.textContent = `${Math.floor(player.experience)} / ${player.nextLevelXp} XP`;
     this.xpFill.style.width = `${xpRatio}%`;

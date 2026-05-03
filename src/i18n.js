@@ -106,10 +106,27 @@ const translations = {
     "enemy.bat": "Morcego",
     "enemy.zombie": "Zumbi",
     "enemy.skeleton": "Esqueleto",
-    "enemy.hound": "Cao infernal",
+    "enemy.hound": "Cão infernal",
     "enemy.wraith": "Espectro",
     "enemy.brute": "Brutamontes",
+    "enemy.ghost": "Espectro Etéreo",
+    "enemy.demon": "Demônio",
     "enemy.boss": "Ceifador",
+
+    // Sinergias
+    "synergy.frostfire.name": "Fogo Glacial ❄️🔥",
+    "synergy.frostfire.desc": "Ice Shard + Fireball: +10% freeze, +15% dano.",
+    "synergy.shadowDance.name": "Dança Sombria 🌑",
+    "synergy.shadowDance.desc":
+      "Shadow Blade + Shuriken: +8% esquiva, +8% crítico.",
+    "synergy.arcaneStorm.name": "Tempestade Arcana ⚡",
+    "synergy.arcaneStorm.desc":
+      "Magic Wand + Thunderbolt + Meteor: +20% área, -15% cooldown.",
+    "synergy.bloodMoon.name": "Lua de Sangue 🌕",
+    "synergy.bloodMoon.desc":
+      "Soul Siphon + Chaos Orb: +5 roubo de vida, +12% dano.",
+    "synergy.whirlwind.name": "Redemoinho 🌪️",
+    "synergy.whirlwind.desc": "Whip + Vortex + Aura: +15% área, +3 espinhos.",
 
     // Upgrades passivos (level-up)
     "passive.health.title": "Coração Blindado",
@@ -128,6 +145,23 @@ const translations = {
     "passive.amount.desc": "+1 projétil ou aplicação extra por ataque.",
     "passive.magnet.title": "Núcleo de XP",
     "passive.magnet.desc": "+30% de alcance para coletar orbes.",
+    "passive.evasion.title": "Passos Etéreos",
+    "passive.evasion.desc": "+7% chance de esquivar de ataques inimigos.",
+    "passive.critChance.title": "Olho do Caçador",
+    "passive.critChance.desc": "+8% chance de acerto crítico (dano dobrado).",
+    "passive.lifeSteal.title": "Sede de Sangue",
+    "passive.lifeSteal.desc": "Cura +3 de vida por inimigo abatido.",
+    "passive.thorns.title": "Armadura de Espinhos",
+    "passive.thorns.desc": "Reflete +4 de dano ao inimigo ao ser atingido.",
+    "passive.explosionChance.title": "Morte Explosiva",
+    "passive.explosionChance.desc":
+      "+10% chance de inimigos explodirem ao morrer.",
+    "passive.freezeChance.title": "Toque Congelante",
+    "passive.freezeChance.desc": "+8% chance de congelar inimigos ao acertar.",
+    "passive.bounty.title": "Saqueador de Almas",
+    "passive.bounty.desc": "+30% de XP extra de cada abate.",
+    "passive.armor.title": "Couraça Sombria",
+    "passive.armor.desc": "Reduz em -2 o dano recebido de cada golpe.",
 
     // Nomes de armas
     "weapon.magicWand.name": "Magic Wand",
@@ -270,7 +304,24 @@ const translations = {
     "enemy.hound": "Hell Hound",
     "enemy.wraith": "Wraith",
     "enemy.brute": "Brute",
+    "enemy.ghost": "Ethereal Ghost",
+    "enemy.demon": "Demon",
     "enemy.boss": "Reaper",
+
+    // Synergies
+    "synergy.frostfire.name": "Frostfire ❄️🔥",
+    "synergy.frostfire.desc": "Ice Shard + Fireball: +10% freeze, +15% damage.",
+    "synergy.shadowDance.name": "Shadow Dance 🌑",
+    "synergy.shadowDance.desc":
+      "Shadow Blade + Shuriken: +8% evasion, +8% crit.",
+    "synergy.arcaneStorm.name": "Arcane Storm ⚡",
+    "synergy.arcaneStorm.desc":
+      "Magic Wand + Thunderbolt + Meteor: +20% area, -15% cooldown.",
+    "synergy.bloodMoon.name": "Blood Moon 🌕",
+    "synergy.bloodMoon.desc":
+      "Soul Siphon + Chaos Orb: +5 lifesteal, +12% damage.",
+    "synergy.whirlwind.name": "Whirlwind 🌪️",
+    "synergy.whirlwind.desc": "Whip + Vortex + Aura: +15% area, +3 thorns.",
 
     // Passive upgrades (level-up)
     "passive.health.title": "Armored Heart",
@@ -289,6 +340,22 @@ const translations = {
     "passive.amount.desc": "+1 extra projectile or application per attack.",
     "passive.magnet.title": "XP Core",
     "passive.magnet.desc": "+30% range to collect orbs.",
+    "passive.evasion.title": "Ethereal Steps",
+    "passive.evasion.desc": "+7% chance to dodge enemy attacks.",
+    "passive.critChance.title": "Hunter's Eye",
+    "passive.critChance.desc": "+8% critical hit chance (double damage).",
+    "passive.lifeSteal.title": "Blood Thirst",
+    "passive.lifeSteal.desc": "Heal +3 HP per enemy killed.",
+    "passive.thorns.title": "Thorn Armor",
+    "passive.thorns.desc": "Reflects +4 damage to enemies on hit.",
+    "passive.explosionChance.title": "Explosive Death",
+    "passive.explosionChance.desc": "+10% chance enemies explode on death.",
+    "passive.freezeChance.title": "Freezing Touch",
+    "passive.freezeChance.desc": "+8% chance to freeze enemies on hit.",
+    "passive.bounty.title": "Soul Reaper",
+    "passive.bounty.desc": "+30% extra XP from each kill.",
+    "passive.armor.title": "Dark Carapace",
+    "passive.armor.desc": "Reduces incoming damage by -2 per hit.",
 
     // Weapon names
     "weapon.magicWand.name": "Magic Wand",

@@ -130,6 +130,17 @@ export class Renderer {
     if (entity.hitFlashTimer > 0) {
       this.drawCircle(screen.x, screen.y, entity.radius + 4, "#fff2c7", 0.25);
     }
+
+    // Frozen indicator — ice halo
+    if (entity.frozenTimer > 0) {
+      this.drawCircle(screen.x, screen.y, entity.radius + 8, "#64f5ff", 0.2);
+      this.drawCircle(screen.x, screen.y, entity.radius + 4, "#64f5ff", 0.08);
+    }
+
+    // Ghost indicator — ethereal glow
+    if (entity.isGhost) {
+      this.drawCircle(screen.x, screen.y, entity.radius + 10, "#b39ddb", 0.08);
+    }
   }
 
   getEnemySprite(spriteUrl) {
@@ -248,30 +259,73 @@ export class Renderer {
   drawEffect(effect, camera) {
     const ctx = this.context;
     const screen = this.worldToScreen(effect.x, effect.y, camera);
+    const alpha = Math.min(1, effect.ttl * 3);
 
     ctx.save();
-    ctx.globalAlpha = Math.max(0, effect.ttl / effect.maxTtl);
+    ctx.globalAlpha = alpha;
 
+    // Legacy effect types (ring, arc)
     if (effect.type === "ring") {
       ctx.strokeStyle = effect.color;
-      ctx.lineWidth = effect.lineWidth;
+      ctx.lineWidth = effect.lineWidth ?? 3;
       ctx.beginPath();
-      ctx.arc(screen.x, screen.y, effect.radius, 0, Math.PI * 2);
+      ctx.arc(screen.x, screen.y, effect.radius ?? 20, 0, Math.PI * 2);
       ctx.stroke();
     }
 
     if (effect.type === "arc") {
       ctx.strokeStyle = effect.color;
-      ctx.lineWidth = effect.lineWidth;
+      ctx.lineWidth = effect.lineWidth ?? 3;
       ctx.beginPath();
       ctx.arc(
         screen.x,
         screen.y,
-        effect.radius,
-        effect.startAngle,
-        effect.endAngle,
+        effect.radius ?? 20,
+        effect.startAngle ?? 0,
+        effect.endAngle ?? Math.PI,
       );
       ctx.stroke();
+    }
+
+    // ✦ New effect kinds (crit, explosion)
+    if (effect.kind === "crit") {
+      // Yellow burst lines
+      ctx.strokeStyle = "#f8c35c";
+      ctx.lineWidth = 3;
+      for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2 + Math.random() * 0.3;
+        const len = 16 + Math.random() * 12;
+        ctx.beginPath();
+        ctx.moveTo(screen.x, screen.y);
+        ctx.lineTo(
+          screen.x + Math.cos(angle) * len,
+          screen.y + Math.sin(angle) * len,
+        );
+        ctx.stroke();
+      }
+      // Text "CRIT"
+      ctx.fillStyle = "#f8c35c";
+      ctx.font = "bold 14px Impact, sans-serif";
+      ctx.textAlign = "center";
+      ctx.fillText("CRIT!", screen.x, screen.y - 16);
+    }
+
+    if (effect.kind === "explosion") {
+      // Expanding orange ring
+      const progress = 1 - effect.ttl / 0.35;
+      const radius = 20 + progress * 60;
+      ctx.strokeStyle = "#ff6b35";
+      ctx.lineWidth = 4;
+      ctx.globalAlpha = alpha * (1 - progress);
+      ctx.beginPath();
+      ctx.arc(screen.x, screen.y, radius, 0, Math.PI * 2);
+      ctx.stroke();
+      // Inner flash
+      ctx.fillStyle = "#ffab40";
+      ctx.globalAlpha = alpha * (1 - progress) * 0.4;
+      ctx.beginPath();
+      ctx.arc(screen.x, screen.y, radius * 0.5, 0, Math.PI * 2);
+      ctx.fill();
     }
 
     ctx.restore();

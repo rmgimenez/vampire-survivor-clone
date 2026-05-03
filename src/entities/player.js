@@ -3,7 +3,7 @@ export class Player {
     this.x = x;
     this.y = y;
     this.radius = 18;
-    this.color = '#4ecdc4';
+    this.color = "#4ecdc4";
     this.maxHealth = 100;
     this.health = 100;
     this.level = 1;
@@ -20,6 +20,18 @@ export class Player {
     this.facingY = 0;
     this.invulnerableTimer = 0;
     this.totalDamageTaken = 0;
+
+    // ✦ Roguelike stats
+    this.evasion = 0; // % chance to dodge (0-0.8)
+    this.critChance = 0; // % chance double damage (0-0.8)
+    this.critMultiplier = 2; // multiplier on crit
+    this.lifeSteal = 0; // HP healed per kill
+    this.thorns = 0; // flat damage reflected on hit
+    this.explosionChance = 0; // % chance enemy explodes on death (0-0.8)
+    this.explosionRadius = 0; // radius of explosion
+    this.freezeChance = 0; // % chance to freeze on hit (0-0.7)
+    this.bountyMultiplier = 0; // bonus XP multiplier (e.g. 0.25 = +25%)
+    this.armor = 0; // flat damage reduction
   }
 
   update(dt, input) {
@@ -48,10 +60,24 @@ export class Player {
       return false;
     }
 
-    const damage = Math.max(1, amount);
+    // Evasion check — dodge the attack entirely
+    if (this.evasion > 0 && Math.random() < this.evasion) {
+      this.invulnerableTimer = 0.3;
+      return false; // dodged!
+    }
+
+    // Armor reduces incoming damage
+    const reduced = Math.max(0, amount - this.armor);
+    const damage = Math.max(1, Math.round(reduced));
     this.health = Math.max(0, this.health - damage);
     this.totalDamageTaken += damage;
     this.invulnerableTimer = 0.55;
+
+    // Thorns — reflect damage back to the nearest enemy
+    if (this.thorns > 0) {
+      return { damage, thorns: this.thorns };
+    }
+
     return true;
   }
 

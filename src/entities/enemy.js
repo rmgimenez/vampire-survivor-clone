@@ -19,9 +19,18 @@ export class Enemy {
     this.contactCooldown = 0;
     this.hitFlashTimer = 0;
     this.markedForRemoval = false;
+    this.frozenTimer = 0;
+    this.isGhost = Boolean(config.isGhost);
   }
 
   update(dt, player) {
+    // Frozen — can't move
+    if (this.frozenTimer > 0) {
+      this.frozenTimer -= dt;
+      this.hitFlashTimer = Math.max(0, this.hitFlashTimer - dt);
+      return;
+    }
+
     const dx = player.x - this.x;
     const dy = player.y - this.y;
     const distance = Math.hypot(dx, dy) || 1;

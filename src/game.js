@@ -7,6 +7,7 @@ import { calculateCoins, saveRun } from "./profile.js";
 import { Renderer } from "./renderer.js";
 import { aabbOverlap, circlesOverlap } from "./systems/collision.js";
 import {
+  applySynergies,
   applyUpgrade,
   buildLevelUpChoices,
   gainExperience,
@@ -35,6 +36,7 @@ function createRunStats() {
     damageDone: 0,
     levelUps: 0,
     coinsEarned: 0,
+    rerollsUsed: 0,
   };
 }
 
@@ -134,6 +136,7 @@ export class Game {
     this.nextEnemyId = 1;
     this.state = GAME_STATES.PLAYING;
     this.spawner.reset();
+    this._appliedSynergies = new Set();
     this.hideOverlay(this.menuScreen);
     this.hideOverlay(this.pauseScreen);
     this.levelUpUI.hide();
@@ -282,9 +285,21 @@ export class Game {
         circlesOverlap(this.player, enemy) &&
         enemy.contactCooldown <= 0
       ) {
-        const hitLanded = this.player.takeDamage(enemy.damage);
-        if (hitLanded) {
+        const result = this.player.takeDamage(enemy.damage);
+
+        if (result) {
           enemy.contactCooldown = 0.7;
+
+          // Thorns — reflect damage back
+          const thornsDmg = result.thorns ?? 0;
+          if (thornsDmg > 0) {
+            this.damageEnemy(enemy, thornsDmg);
+          }
+
+          // Life Steal — heal on taking damage (extra life steal effect)
+          if (this.player.lifeSteal > 0) {
+            this.player.heal(this.player.lifeSteal);
+          }
         }
       }
     }
@@ -325,6 +340,11 @@ export class Game {
 
     for (const entity of pushEntities) {
       if (!entity || !entity.radius) {
+        continue;
+      }
+
+      // Ghosts phase through obstacles
+      if (entity.isGhost) {
         continue;
       }
 
@@ -384,20 +404,71 @@ export class Game {
       return;
     }
 
-    this.stats.damageDone += amount;
-    const defeated = enemy.takeDamage(amount);
+    const player = this.player;
+    let finalDamage = amount;
+
+    // Critical Strike — double damage proc
+    let isCrit = false;
+    if (player.critChance > 0 && Math.random() < player.critChance) {
+      finalDamage = Math.round(amount * player.critMultiplier);
+      isCrit = true;
+    }
+
+    this.stats.damageDone += finalDamage;
+
+    // Freeze — apply slow to enemy
+    if (player.freezeChance > 0 && Math.random() < player.freezeChance) {
+      enemy.frozenTimer = 1.5; // frozen for 1.5s
+    }
+
+    const defeated = enemy.takeDamage(finalDamage);
+
+    if (isCrit) {
+      this.addEffect(enemy.x, enemy.y, "crit", 0.3);
+    }
 
     if (defeated) {
       enemy.markedForRemoval = true;
       this.stats.kills += 1;
       this.stats.killsByType[enemy.type] =
         (this.stats.killsByType[enemy.type] ?? 0) + 1;
-      this.pickups.push(new XpOrb(enemy.x, enemy.y, enemy.xp));
+
+      // Life Steal — heal on kill
+      if (player.lifeSteal > 0) {
+        player.heal(player.lifeSteal);
+      }
+
+      // Bounty — extra XP
+      const xpAmount = Math.round(enemy.xp * (1 + player.bountyMultiplier));
+      this.pickups.push(new XpOrb(enemy.x, enemy.y, xpAmount));
+
+      // Explosion — chain damage nearby enemies
+      if (
+        player.explosionChance > 0 &&
+        Math.random() < player.explosionChance
+      ) {
+        const explosionRadius = 80 + player.explosionRadius;
+        const explosionDamage = Math.round(10 + player.thorns * 2);
+        this.addEffect(enemy.x, enemy.y, "explosion", 0.35);
+
+        for (const other of this.enemies) {
+          if (other === enemy || other.markedForRemoval) continue;
+          const dx = other.x - enemy.x;
+          const dy = other.y - enemy.y;
+          if (dx * dx + dy * dy < explosionRadius * explosionRadius) {
+            this.damageEnemy(other, explosionDamage);
+          }
+        }
+      }
 
       if (Math.random() < this.getChestDropChance(enemy)) {
         this.pickups.push(this.createChestPickup(enemy));
       }
     }
+  }
+
+  addEffect(x, y, kind, ttl) {
+    this.effects.push({ x, y, kind, ttl });
   }
 
   getChestDropChance(enemy) {
@@ -427,20 +498,35 @@ export class Game {
 
   presentLevelUp() {
     this.state = GAME_STATES.LEVEL_UP;
-    const choices = buildLevelUpChoices(this);
+    const maxRerolls = 5;
+    const used = this.stats.rerollsUsed ?? 0;
+    const rerollsLeft = maxRerolls - used;
 
-    this.levelUpUI.show(choices, (choice) => {
-      applyUpgrade(this, choice);
-      this.pendingLevelUps -= 1;
+    const showChoices = () => {
+      const choices = buildLevelUpChoices(this);
+      this.levelUpUI.show(
+        choices,
+        (choice) => {
+          applyUpgrade(this, choice);
+          this.pendingLevelUps -= 1;
 
-      if (this.pendingLevelUps > 0) {
-        this.presentLevelUp();
-        return;
-      }
+          if (this.pendingLevelUps > 0) {
+            this.presentLevelUp();
+            return;
+          }
+          this.levelUpUI.hide();
+          this.state = GAME_STATES.PLAYING;
+        },
+        () => {
+          // Reroll handler
+          this.stats.rerollsUsed = (this.stats.rerollsUsed ?? 0) + 1;
+          showChoices();
+        },
+        maxRerolls - (this.stats.rerollsUsed ?? 0),
+      );
+    };
 
-      this.levelUpUI.hide();
-      this.state = GAME_STATES.PLAYING;
-    });
+    showChoices();
   }
 
   finishRun(win) {
@@ -492,12 +578,14 @@ export class Game {
     }
 
     this.weapons.push(this.createWeapon(type));
+    applySynergies(this);
   }
 
   levelUpWeapon(type) {
     const weapon = this.getWeapon(type);
     if (weapon) {
       weapon.levelUp();
+      applySynergies(this);
     }
   }
 

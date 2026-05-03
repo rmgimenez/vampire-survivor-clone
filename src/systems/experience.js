@@ -42,6 +42,47 @@ const PASSIVE_UPGRADES = [
     title: "Nucleo de XP",
     description: "+30% de alcance para coletar orbes.",
   },
+  // ✦ NOVOS PASSIVES ROGUELIKE ✦
+  {
+    id: "evasion",
+    title: "Passos Etéreos",
+    description: "+7% chance de esquivar de ataques inimigos.",
+  },
+  {
+    id: "critChance",
+    title: "Olho do Caçador",
+    description: "+8% chance de acerto crítico (dano dobrado).",
+  },
+  {
+    id: "lifeSteal",
+    title: "Sede de Sangue",
+    description: "Cura +3 de vida por inimigo abatido.",
+  },
+  {
+    id: "thorns",
+    title: "Armadura de Espinhos",
+    description: "Reflete +4 de dano ao inimigo ao ser atingido.",
+  },
+  {
+    id: "explosionChance",
+    title: "Morte Explosiva",
+    description: "+10% chance de inimigos explodirem ao morrer.",
+  },
+  {
+    id: "freezeChance",
+    title: "Toque Congelante",
+    description: "+8% chance de congelar inimigos ao acertar.",
+  },
+  {
+    id: "bounty",
+    title: "Saqueador de Almas",
+    description: "+30% de XP extra de cada abate.",
+  },
+  {
+    id: "armor",
+    title: "Couraça Sombria",
+    description: "Reduz em -2 o dano recebido de cada golpe.",
+  },
 ];
 
 const PASSIVE_CATEGORY = {
@@ -53,6 +94,14 @@ const PASSIVE_CATEGORY = {
   recovery: "defense",
   amount: "offense",
   magnet: "utility",
+  evasion: "defense",
+  critChance: "offense",
+  lifeSteal: "offense",
+  thorns: "defense",
+  explosionChance: "offense",
+  freezeChance: "offense",
+  bounty: "utility",
+  armor: "defense",
 };
 
 const RARITY_TIERS = [
@@ -232,6 +281,7 @@ export function applyUpgrade(game, choice) {
         1 + Math.max(0, choice.rarityBonus ?? 0),
       );
       game.weapons.push(weapon);
+      applySynergies(game);
     }
     return;
   }
@@ -281,7 +331,140 @@ export function applyUpgrade(game, choice) {
     case "magnet":
       player.pickupRange *= 1 + 0.3 * rarityMultiplier;
       break;
+    // ✦ NOVOS PASSIVES ✦
+    case "evasion":
+      player.evasion = Math.min(0.8, player.evasion + 0.07 * rarityMultiplier);
+      break;
+    case "critChance":
+      player.critChance = Math.min(
+        0.8,
+        player.critChance + 0.08 * rarityMultiplier,
+      );
+      break;
+    case "lifeSteal":
+      player.lifeSteal += 3 * rarityMultiplier;
+      break;
+    case "thorns":
+      player.thorns += Math.round(4 * rarityMultiplier);
+      break;
+    case "explosionChance":
+      player.explosionChance = Math.min(
+        0.8,
+        player.explosionChance + 0.1 * rarityMultiplier,
+      );
+      player.explosionRadius += 15 * rarityMultiplier;
+      break;
+    case "freezeChance":
+      player.freezeChance = Math.min(
+        0.7,
+        player.freezeChance + 0.08 * rarityMultiplier,
+      );
+      break;
+    case "bounty":
+      player.bountyMultiplier = Math.min(
+        3,
+        player.bountyMultiplier + 0.3 * rarityMultiplier,
+      );
+      break;
+    case "armor":
+      player.armor = Math.min(
+        20,
+        player.armor + Math.round(2 * rarityMultiplier),
+      );
+      break;
     default:
       break;
   }
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// SYNERGY SYSTEM — weapon combos grant bonus effects
+// ═══════════════════════════════════════════════════════════════════════════════
+
+const SYNERGIES = [
+  {
+    id: "frostfire",
+    weapons: ["iceShard", "fireball"],
+    nameKey: "synergy.frostfire.name",
+    descKey: "synergy.frostfire.desc",
+    effect: (player) => {
+      player.freezeChance = Math.min(0.7, (player.freezeChance ?? 0) + 0.1);
+      player.damageMultiplier *= 1.15;
+    },
+  },
+  {
+    id: "shadowDance",
+    weapons: ["shadowBlade", "shuriken"],
+    nameKey: "synergy.shadowDance.name",
+    descKey: "synergy.shadowDance.desc",
+    effect: (player) => {
+      player.evasion = Math.min(0.8, (player.evasion ?? 0) + 0.08);
+      player.critChance = Math.min(0.8, (player.critChance ?? 0) + 0.08);
+    },
+  },
+  {
+    id: "arcaneStorm",
+    weapons: ["magicWand", "thunderbolt", "meteor"],
+    nameKey: "synergy.arcaneStorm.name",
+    descKey: "synergy.arcaneStorm.desc",
+    effect: (player) => {
+      player.areaMultiplier *= 1.2;
+      player.cooldownMultiplier *= 0.85;
+    },
+  },
+  {
+    id: "bloodMoon",
+    weapons: ["soulSiphon", "chaosOrb"],
+    nameKey: "synergy.bloodMoon.name",
+    descKey: "synergy.bloodMoon.desc",
+    effect: (player) => {
+      player.lifeSteal = (player.lifeSteal ?? 0) + 5;
+      player.damageMultiplier *= 1.12;
+    },
+  },
+  {
+    id: "whirlwind",
+    weapons: ["whip", "vortex", "aura"],
+    nameKey: "synergy.whirlwind.name",
+    descKey: "synergy.whirlwind.desc",
+    effect: (player) => {
+      player.areaMultiplier *= 1.15;
+      player.thorns = (player.thorns ?? 0) + 3;
+    },
+  },
+];
+
+/**
+ * Returns a list of active synergy descriptions for the current weapon loadout.
+ */
+export function getActiveSynergies(game) {
+  const weaponTypes = new Set(game.weapons.map((w) => w.type));
+  const active = [];
+
+  for (const synergy of SYNERGIES) {
+    const hasAll = synergy.weapons.every((type) => weaponTypes.has(type));
+    if (hasAll && !game._appliedSynergies?.has(synergy.id)) {
+      active.push(synergy);
+    }
+  }
+
+  return active;
+}
+
+/**
+ * Applies any newly-unlocked synergies to the player.
+ */
+export function applySynergies(game) {
+  if (!game._appliedSynergies) {
+    game._appliedSynergies = new Set();
+  }
+
+  const active = getActiveSynergies(game);
+
+  for (const synergy of active) {
+    synergy.effect(game.player);
+    game._appliedSynergies.add(synergy.id);
+  }
+
+  return active;
 }

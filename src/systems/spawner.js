@@ -3,19 +3,25 @@ import { Enemy } from "../entities/enemy.js";
 import {
   chooseEnemyType,
   getDifficulty,
+  getEliteInterval,
+  getEliteScale,
+  getBossScale,
   getEnemyCap,
   getGroupSize,
   getSpawnInterval,
+  pickEliteType,
 } from "./waves.js";
 
 export class Spawner {
   constructor() {
     this.spawnTimer = 0;
+    this.eliteTimer = 0;
     this.bossMilestones = new Set();
   }
 
   reset() {
     this.spawnTimer = 0;
+    this.eliteTimer = 0;
     this.bossMilestones.clear();
   }
 
@@ -38,6 +44,18 @@ export class Spawner {
       }
     }
 
+    // Elite spawns — mini-bosses every ~2 minutes
+    this.eliteTimer -= dt;
+    if (this.eliteTimer <= 0 && game.elapsed > 120) {
+      const eliteType = pickEliteType(game.elapsed);
+      const eliteConfig = ENEMY_TYPES[eliteType];
+      if (eliteConfig) {
+        this.spawnElite(game, eliteType);
+      }
+      this.eliteTimer = getEliteInterval(game.elapsed);
+    }
+
+    // Boss spawns every 8 minutes
     const currentMilestone = Math.floor(game.elapsed / 480);
     if (currentMilestone > 0 && !this.bossMilestones.has(currentMilestone)) {
       this.bossMilestones.add(currentMilestone);
@@ -62,9 +80,39 @@ export class Spawner {
     );
   }
 
+  /**
+   * Spawns an elite (mini-boss) — tougher, bigger, drops better loot.
+   */
+  spawnElite(game, eliteType) {
+    const eliteConfig = { ...ENEMY_TYPES[eliteType] };
+    eliteConfig.name = `Elite ${eliteConfig.name}`;
+    eliteConfig.isBoss = false;
+    eliteConfig.isElite = true;
+
+    const eliteScale = getEliteScale(game.elapsed);
+    const position = this.getSpawnPosition(game, 80);
+
+    const elite = new Enemy({
+      id: game.nextEnemyId++,
+      x: position.x,
+      y: position.y,
+      config: eliteConfig,
+      scale: eliteScale * 1.3,
+    });
+
+    // Boosted stats
+    elite.maxHealth = Math.round(elite.maxHealth * 2.5);
+    elite.health = elite.maxHealth;
+    elite.damage = Math.round(elite.damage * 1.6);
+    elite.xp = Math.round(elite.xp * 4);
+    elite.radius = elite.baseRadius * 1.4;
+    elite.color = "#ff6b9d"; // pink glow for elites
+    game.enemies.push(elite);
+  }
+
   spawnBoss(game) {
     const position = this.getSpawnPosition(game, 320);
-    const scale = 1 + game.elapsed / 500;
+    const bossScale = getBossScale(game.elapsed);
 
     game.enemies.push(
       new Enemy({
@@ -72,7 +120,7 @@ export class Spawner {
         x: position.x,
         y: position.y,
         config: ENEMY_TYPES.boss,
-        scale,
+        scale: bossScale,
       }),
     );
   }
