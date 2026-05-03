@@ -4,6 +4,8 @@
 
 Clone do jogo **Vampire Survivors** desenvolvido inteiramente com tecnologias web nativas: **HTML**, **CSS** e **JavaScript puro** (sem frameworks ou bibliotecas externas). O jogo roda diretamente no browser, sem necessidade de instalação ou servidor backend.
 
+O jogo tem a opção dos idiomas **Português** e **Inglês**, com detecção automática baseada no idioma do navegador. O jogador controla um personagem que deve sobreviver a ondas intermináveis de inimigos, coletando experiência e melhorando suas armas para resistir o máximo possível. O objetivo é sobreviver por 30 minutos, enfrentando inimigos cada vez mais fortes e desafiadores.
+
 ---
 
 ## Stack Tecnológica
@@ -54,12 +56,14 @@ vampire-survivor-clone/
 ## Mecânicas do Jogo
 
 ### Jogador
+
 - Movimento em 8 direções via teclado (`WASD` ou setas)
 - Atira automaticamente — sem input manual de ataque
 - Possui atributos: `vida`, `velocidade`, `dano`, `área`, `cooldown`, `recuperação`, `quantidade`
 - Sobe de nível ao acumular XP suficiente
 
 ### Inimigos
+
 - Spawnam ao redor da tela em ondas contínuas
 - Perseguem o jogador diretamente (pathfinding simples)
 - Tipos iniciais:
@@ -69,11 +73,13 @@ vampire-survivor-clone/
 - Cada inimigo derrotado solta um **orbe de XP**
 
 ### Sistema de Level-Up
+
 - Ao nível suficiente de XP, o jogo pausa e exibe **3 opções de upgrade**
 - Upgrades incluem: novas armas, melhorias de armas existentes, upgrades passivos
 - O jogador escolhe 1 opção e o jogo retoma
 
 ### Armas
+
 Cada arma possui: `dano`, `cooldown`, `quantidade`, `área` e `nível` (1–8).
 
 | Arma       | Comportamento                                          |
@@ -84,6 +90,7 @@ Cada arma possui: `dano`, `cooldown`, `quantidade`, `área` e `nível` (1–8).
 | Knife      | Projéteis rápidos na direção do movimento              |
 
 ### Progressão e Dificuldade
+
 - Duração padrão da partida: **30 minutos**
 - A cada minuto, os inimigos ficam mais fortes (mais vida, velocidade, quantidade)
 - Boss spawn a cada 10 minutos
@@ -94,27 +101,31 @@ Cada arma possui: `dano`, `cooldown`, `quantidade`, `área` e `nível` (1–8).
 ## Sistemas Técnicos
 
 ### Game Loop
+
 ```javascript
 // Baseado em requestAnimationFrame com delta time
 function gameLoop(timestamp) {
-    const dt = (timestamp - lastTime) / 1000; // segundos
-    update(dt);
-    render();
-    requestAnimationFrame(gameLoop);
+  const dt = (timestamp - lastTime) / 1000; // segundos
+  update(dt);
+  render();
+  requestAnimationFrame(gameLoop);
 }
 ```
 
 ### Colisão
+
 - Detecção **AABB** (Axis-Aligned Bounding Box) para projéteis vs inimigos
 - Detecção **circular** para dano em área (aura) e coleta de XP
 - Sem física — colisão apenas para dano e coleta
 
 ### Câmera
+
 - Câmera segue o jogador (scrolling infinito)
 - O mapa é gerado proceduralmente por tiles repetidos
 - Inimigos spawnam fora da área visível da câmera
 
 ### Renderização
+
 - Tudo renderizado via `Canvas 2D API`
 - Ordem de renderização: fundo → orbes de XP → inimigos → projéteis → jogador → HUD
 - Sprites podem ser retângulos coloridos no MVP (sem assets externos obrigatórios)

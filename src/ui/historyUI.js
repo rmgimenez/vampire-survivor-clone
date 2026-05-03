@@ -1,3 +1,5 @@
+import { t } from "../i18n.js";
+
 export class HistoryUI {
   constructor(onClose) {
     this.screen = document.getElementById("history-screen");
@@ -33,18 +35,17 @@ export class HistoryUI {
     const totalCoins = profile.totalCoins;
 
     this.statsEl.innerHTML = `
-      <div class="stat-card"><strong>${totalRuns}</strong><span>Runs</span></div>
-      <div class="stat-card"><strong>${wins}</strong><span>Vitórias</span></div>
-      <div class="stat-card"><strong>${totalKills}</strong><span>Abates totais</span></div>
-      <div class="stat-card"><strong>${bestKills}</strong><span>Melhor run (abates)</span></div>
-      <div class="stat-card"><strong>${totalCoins} 🪙</strong><span>Ouro total ganho</span></div>
+      <div class="stat-card"><strong>${totalRuns}</strong><span>${t("history.stat.runs")}</span></div>
+      <div class="stat-card"><strong>${wins}</strong><span>${t("history.stat.wins")}</span></div>
+      <div class="stat-card"><strong>${totalKills}</strong><span>${t("history.stat.totalKills")}</span></div>
+      <div class="stat-card"><strong>${bestKills}</strong><span>${t("history.stat.bestRun")}</span></div>
+      <div class="stat-card"><strong>${totalCoins} 🪙</strong><span>${t("history.stat.totalCoins")}</span></div>
     `;
 
     this.listEl.innerHTML = "";
 
     if (runs.length === 0) {
-      this.listEl.innerHTML =
-        '<p class="muted-hint">Nenhuma run concluída ainda.</p>';
+      this.listEl.innerHTML = `<p class="muted-hint">${t("history.empty")}</p>`;
       return;
     }
 
@@ -53,12 +54,12 @@ export class HistoryUI {
     header.className = "history-row history-header";
     header.innerHTML = `
       <span></span>
-      <span>Data</span>
-      <span>Tempo</span>
-      <span>Nível</span>
-      <span>Abates</span>
-      <span>Dano</span>
-      <span>Ouro</span>
+      <span>${t("history.col.date")}</span>
+      <span>${t("history.col.time")}</span>
+      <span>${t("history.col.level")}</span>
+      <span>${t("history.col.kills")}</span>
+      <span>${t("history.col.damage")}</span>
+      <span>${t("history.col.gold")}</span>
     `;
     this.listEl.append(header);
 
@@ -71,9 +72,9 @@ export class HistoryUI {
         <span class="run-badge">${run.win ? "🏆" : "💀"}</span>
         <span>${run.date ?? "—"}</span>
         <span>${mins}m ${secs}s</span>
-        <span>Nvl ${run.level}</span>
+        <span>${t("history.level")} ${run.level}</span>
         <span>${run.kills}</span>
-        <span>${(run.damageDone ?? 0).toLocaleString("pt-BR")}</span>
+        <span>${(run.damageDone ?? 0).toLocaleString()}</span>
         <span>+${run.coinsEarned} 🪙</span>
       `;
       this.listEl.append(row);

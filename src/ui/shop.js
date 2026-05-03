@@ -1,4 +1,5 @@
 import { META_UPGRADES, purchaseUpgrade } from "../profile.js";
+import { t } from "../i18n.js";
 
 export class ShopUI {
   constructor(onClose) {
@@ -39,8 +40,8 @@ export class ShopUI {
       card.className = "shop-card";
       card.innerHTML = `
         <div class="shop-icon">${upg.icon}</div>
-        <strong class="shop-title">${upg.title}</strong>
-        <p class="shop-desc">${upg.description}</p>
+        <strong class="shop-title">${t(`meta.${upg.id}.title`)}</strong>
+        <p class="shop-desc">${t(`meta.${upg.id}.desc`)}</p>
         <div class="shop-level-dots">
           ${Array.from(
             { length: upg.maxLevel },
@@ -51,7 +52,7 @@ export class ShopUI {
           class="buy-btn ${canAfford ? "primary-button" : maxed ? "maxed-button" : "disabled-button"} small-button"
           ${maxed || !canAfford ? "disabled" : ""}
           data-id="${upg.id}">
-          ${maxed ? "MÁXIMO" : `${cost} 🪙`}
+          ${maxed ? t("shop.maxed") : `${cost} 🪙`}
         </button>
       `;
       this.gridEl.append(card);

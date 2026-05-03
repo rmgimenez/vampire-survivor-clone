@@ -1,5 +1,6 @@
 import { Game } from "./game.js";
 import { InputController } from "./input.js";
+import { applyStaticTranslations, toggleLanguage } from "./i18n.js";
 import { getActiveProfile } from "./profile.js";
 import { GameOverUI } from "./ui/gameover.js";
 import { HistoryUI } from "./ui/historyUI.js";
@@ -64,6 +65,18 @@ function refreshMenuProfile() {
   if (coinsEl) coinsEl.textContent = `${profile.coins} 🪙`;
 }
 
+// ── Language toggle ──────────────────────────────────────────────────────────
+for (const btn of document.querySelectorAll(".lang-toggle-btn")) {
+  btn.addEventListener("click", () => {
+    toggleLanguage();
+    // Re-render dynamic screens if currently visible
+    const profileScreen = document.getElementById("profile-screen");
+    if (profileScreen && !profileScreen.classList.contains("hidden")) {
+      profileSelectUI._render();
+    }
+  });
+}
+
 // ── Button bindings ───────────────────────────────────────────────────────────
 document.getElementById("start-button")?.addEventListener("click", () => {
   game.startNewRun();
@@ -101,6 +114,9 @@ window.addEventListener("resize", () => {
 });
 
 game.resize();
+
+// ── Apply initial translations ────────────────────────────────────────────────
+applyStaticTranslations();
 
 // ── Initial state: always start at profile selection ─────────────────────────
 game.state = "MENU"; // keep game loop in idle state

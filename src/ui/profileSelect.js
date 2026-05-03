@@ -4,6 +4,7 @@ import {
   getProfiles,
   setActiveProfile,
 } from "../profile.js";
+import { t } from "../i18n.js";
 
 function esc(str) {
   return String(str)
@@ -43,8 +44,7 @@ export class ProfileSelectUI {
     this.listEl.innerHTML = "";
 
     if (profiles.length === 0) {
-      this.listEl.innerHTML =
-        '<p class="muted-hint">Nenhum perfil ainda. Crie um abaixo.</p>';
+      this.listEl.innerHTML = `<p class="muted-hint">${t("profile.empty")}</p>`;
       return;
     }
 
@@ -62,14 +62,14 @@ export class ProfileSelectUI {
           <strong class="profile-name">${esc(profile.name)}</strong>
           <span class="profile-meta">
             ${runs} run${runs !== 1 ? "s" : ""}
-            &nbsp;·&nbsp; ${wins} vitória${wins !== 1 ? "s" : ""}
+            &nbsp;·&nbsp; ${wins} ${wins !== 1 ? t("profile.wins") : t("profile.win")}
             &nbsp;·&nbsp; ${profile.coins} 🪙
-            &nbsp;·&nbsp; melhor: ${bestKills} abates
+            &nbsp;·&nbsp; ${t("profile.best")}: ${bestKills} ${t("profile.kills")}
           </span>
         </div>
         <div class="profile-actions">
-          <button class="select-btn primary-button small-button" data-id="${esc(profile.id)}">Jogar</button>
-          <button class="delete-btn danger-button small-button" data-id="${esc(profile.id)}" title="Apagar perfil">✕</button>
+          <button class="select-btn primary-button small-button" data-id="${esc(profile.id)}">${t("profile.play")}</button>
+          <button class="delete-btn danger-button small-button" data-id="${esc(profile.id)}" title="${t("profile.deleteTitle")}">✕</button>
         </div>
       `;
       this.listEl.append(card);
@@ -84,11 +84,7 @@ export class ProfileSelectUI {
 
     this.listEl.querySelectorAll(".delete-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        if (
-          confirm(
-            "Apagar este perfil permanentemente? Esta ação não pode ser desfeita.",
-          )
-        ) {
+        if (confirm(t("profile.deleteConfirm"))) {
           deleteProfile(btn.dataset.id);
           this._render();
         }

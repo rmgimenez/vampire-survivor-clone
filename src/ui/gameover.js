@@ -1,3 +1,5 @@
+import { t } from "../i18n.js";
+
 export class GameOverUI {
   constructor() {
     this.screen = document.getElementById("gameover-screen");
@@ -9,21 +11,25 @@ export class GameOverUI {
   }
 
   show({ win, elapsed, stats, playerLevel, coinsEarned, totalCoins }) {
-    this.kicker.textContent = win ? "Vitoria" : "Fim de jogo";
-    this.title.textContent = win ? "A alvorada chegou." : "Voce caiu na noite.";
+    this.kicker.textContent = win
+      ? t("gameover.win.kicker")
+      : t("gameover.lose.kicker");
+    this.title.textContent = win
+      ? t("gameover.win.title")
+      : t("gameover.lose.title");
     this.summary.textContent = win
-      ? "Voce resistiu aos 30 minutos e derrotou a horda final."
-      : "Reorganize o arsenal, escolha melhores upgrades e tente outra vez.";
+      ? t("gameover.win.summary")
+      : t("gameover.lose.summary");
 
     this.stats.innerHTML = "";
     const statEntries = [
       [
-        "Tempo",
+        t("gameover.stat.time"),
         `${Math.floor(elapsed / 60)}m ${String(Math.floor(elapsed % 60)).padStart(2, "0")}s`,
       ],
-      ["Nivel", String(playerLevel)],
-      ["Abates", String(stats.kills)],
-      ["Dano causado", String(Math.round(stats.damageDone))],
+      [t("gameover.stat.level"), String(playerLevel)],
+      [t("gameover.stat.kills"), String(stats.kills)],
+      [t("gameover.stat.damage"), String(Math.round(stats.damageDone))],
     ];
 
     for (const [label, value] of statEntries) {
@@ -36,10 +42,10 @@ export class GameOverUI {
     if (this.coinsRow) {
       this.coinsRow.innerHTML = `
         <div class="coins-earned-badge">
-          <span class="coins-label">Ouro ganho nesta run</span>
+          <span class="coins-label">${t("gameover.coinsEarned")}</span>
           <span class="coins-value">+${coinsEarned} 🪙</span>
         </div>
-        <div class="coins-total-hint">Total no perfil: ${totalCoins} 🪙</div>
+        <div class="coins-total-hint">${t("gameover.coinsTotal")} ${totalCoins} 🪙</div>
       `;
     }
 

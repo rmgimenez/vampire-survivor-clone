@@ -14,7 +14,7 @@
         <div class="hud-row top-row">
           <div class="panel stat-panel">
             <div class="label-row">
-              <span>Vida</span>
+              <span data-i18n="hud.health">Vida</span>
               <span id="health-text">100 / 100</span>
             </div>
             <div class="bar health-bar">
@@ -23,7 +23,7 @@
           </div>
 
           <div class="panel timer-panel">
-            <span class="timer-label">Noite</span>
+            <span class="timer-label" data-i18n="hud.night">Noite</span>
             <strong id="timer-text">00:00</strong>
           </div>
         </div>
@@ -40,7 +40,7 @@
           </div>
 
           <div class="panel loadout-panel">
-            <span class="section-title">Armas</span>
+            <span class="section-title" data-i18n="hud.weapons">Armas</span>
             <div id="weapon-list" class="weapon-list"></div>
           </div>
         </div>
@@ -51,7 +51,7 @@
         <div class="screen-card profile-card-screen">
           <p class="eyebrow">Crimson Dawn</p>
           <h1>Survivors</h1>
-          <p class="screen-copy">
+          <p class="screen-copy" data-i18n="profile.subtitle">
             Escolha um perfil para continuar ou crie um novo aventureiro.
           </p>
 
@@ -63,13 +63,21 @@
               type="text"
               class="name-input"
               placeholder="Nome do aventureiro…"
+              data-i18n-placeholder="profile.namePlaceholder"
               maxlength="24"
               autocomplete="off"
             />
-            <button id="profile-create-btn" class="primary-button small-button">
+            <button
+              id="profile-create-btn"
+              class="primary-button small-button"
+              data-i18n="profile.createBtn"
+            >
               Criar perfil
             </button>
           </div>
+          <button class="link-button lang-toggle-btn" data-i18n="lang.toggle">
+            🌐 English
+          </button>
         </div>
       </div>
 
@@ -84,31 +92,54 @@
           </div>
           <p class="eyebrow">Crimson Dawn</p>
           <h1>Survivors</h1>
-          <p class="screen-copy">
+          <p class="screen-copy" data-i18n="menu.subtitle">
             Sobreviva por 30 minutos, evolua armas e atravesse a maré de
             criaturas.
           </p>
           <div class="menu-buttons">
-            <button id="start-button" class="primary-button">⚔️ Jogar</button>
-            <button id="shop-button" class="secondary-button">
+            <button
+              id="start-button"
+              class="primary-button"
+              data-i18n="menu.playBtn"
+            >
+              ⚔️ Jogar
+            </button>
+            <button
+              id="shop-button"
+              class="secondary-button"
+              data-i18n="menu.shopBtn"
+            >
               🛒 Loja Permanente
             </button>
-            <button id="history-button" class="secondary-button">
+            <button
+              id="history-button"
+              class="secondary-button"
+              data-i18n="menu.historyBtn"
+            >
               📜 Histórico
             </button>
           </div>
-          <button id="change-profile-btn" class="link-button">
+          <button
+            id="change-profile-btn"
+            class="link-button"
+            data-i18n="menu.changeProfile"
+          >
             Trocar perfil
           </button>
-          <p class="hint">Movimento: WASD ou setas. Pausa: ESC.</p>
+          <p class="hint" data-i18n="menu.hint">
+            Movimento: WASD ou setas. Pausa: ESC.
+          </p>
+          <button class="link-button lang-toggle-btn" data-i18n="lang.toggle">
+            🌐 English
+          </button>
         </div>
       </div>
 
       <!-- ══ LEVEL UP ════════════════════════════════════════════════════════ -->
       <div id="levelup-screen" class="screen hidden">
         <div class="screen-card overlay-card">
-          <p class="eyebrow">Level Up</p>
-          <h2>Escolha um aprimoramento</h2>
+          <p class="eyebrow" data-i18n="levelup.eyebrow">Level Up</p>
+          <h2 data-i18n="levelup.title">Escolha um aprimoramento</h2>
           <div id="levelup-options" class="option-grid"></div>
         </div>
       </div>
@@ -116,9 +147,11 @@
       <!-- ══ PAUSE ══════════════════════════════════════════════════════════ -->
       <div id="pause-screen" class="screen hidden">
         <div class="screen-card overlay-card">
-          <p class="eyebrow">Pausado</p>
-          <h2>A escuridão aguarda</h2>
-          <p class="screen-copy">Pressione ESC para continuar.</p>
+          <p class="eyebrow" data-i18n="pause.eyebrow">Pausado</p>
+          <h2 data-i18n="pause.title">A escuridão aguarda</h2>
+          <p class="screen-copy" data-i18n="pause.hint">
+            Pressione ESC para continuar.
+          </p>
         </div>
       </div>
 
@@ -131,10 +164,20 @@
           <div id="gameover-stats" class="stats-grid"></div>
           <div id="gameover-coins-row" class="coins-row"></div>
           <div class="gameover-buttons">
-            <button id="restart-button" class="primary-button">
+            <button
+              id="restart-button"
+              class="primary-button"
+              data-i18n="gameover.playAgain"
+            >
               ▶ Jogar novamente
             </button>
-            <button id="menu-button" class="secondary-button">🏠 Menu</button>
+            <button
+              id="menu-button"
+              class="secondary-button"
+              data-i18n="gameover.menu"
+            >
+              🏠 Menu
+            </button>
           </div>
         </div>
       </div>
@@ -144,18 +187,24 @@
         <div class="screen-card shop-card-screen">
           <div class="shop-header">
             <div>
-              <p class="eyebrow">Loja Permanente</p>
-              <h2>Upgrades Eternos</h2>
+              <p class="eyebrow" data-i18n="shop.eyebrow">Loja Permanente</p>
+              <h2 data-i18n="shop.title">Upgrades Eternos</h2>
             </div>
             <div class="shop-header-right">
-              <span class="shop-balance-label">Saldo</span>
+              <span class="shop-balance-label" data-i18n="shop.balanceLabel"
+                >Saldo</span
+              >
               <strong id="shop-coins" class="shop-balance">0 🪙</strong>
-              <button id="shop-close-btn" class="secondary-button small-button">
+              <button
+                id="shop-close-btn"
+                class="secondary-button small-button"
+                data-i18n="shop.closeBtn"
+              >
                 ✕ Fechar
               </button>
             </div>
           </div>
-          <p class="screen-copy shop-desc-top">
+          <p class="screen-copy shop-desc-top" data-i18n="shop.desc">
             Upgrades comprados aqui são permanentes e se aplicam a todas as runs
             deste perfil.
           </p>
@@ -168,12 +217,15 @@
         <div class="screen-card history-card-screen">
           <div class="history-header">
             <div>
-              <p class="eyebrow">Histórico de Runs</p>
+              <p class="eyebrow" data-i18n="history.eyebrow">
+                Histórico de Runs
+              </p>
               <h2 id="history-profile-name">—</h2>
             </div>
             <button
               id="history-close-btn"
               class="secondary-button small-button"
+              data-i18n="history.closeBtn"
             >
               ✕ Fechar
             </button>
