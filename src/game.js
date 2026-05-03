@@ -2,6 +2,7 @@ import { GAME_DURATION, GAME_STATES } from "./config.js";
 import { Player } from "./entities/player.js";
 import { XpOrb } from "./entities/xpOrb.js";
 import { ChestPickup } from "./entities/chestPickup.js";
+import { Obstacle } from "./entities/obstacle.js";
 import { calculateCoins, saveRun } from "./profile.js";
 import { Renderer } from "./renderer.js";
 import { aabbOverlap, circlesOverlap } from "./systems/collision.js";
@@ -37,6 +38,42 @@ function createRunStats() {
   };
 }
 
+function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+function circleRectOverlap(circle, rect) {
+  const closestX = clamp(circle.x, rect.left, rect.right);
+  const closestY = clamp(circle.y, rect.top, rect.bottom);
+  const dx = circle.x - closestX;
+  const dy = circle.y - closestY;
+  const distanceSquared = dx * dx + dy * dy;
+  const radiusSquared = circle.radius * circle.radius;
+  return {
+    overlap: distanceSquared < radiusSquared,
+    dx,
+    dy,
+    distanceSquared,
+  };
+}
+
+function pushCircleOutOfRect(circle, rect) {
+  const overlapInfo = circleRectOverlap(circle, rect);
+  if (!overlapInfo.overlap) {
+    return null;
+  }
+
+  const dist = Math.sqrt(Math.max(0.0001, overlapInfo.distanceSquared));
+  const pushDistance = circle.radius - dist;
+  const directionX = dist > 0 ? overlapInfo.dx / dist : 1;
+  const directionY = dist > 0 ? overlapInfo.dy / dist : 0;
+
+  return {
+    x: directionX * pushDistance,
+    y: directionY * pushDistance,
+  };
+}
+
 export class Game {
   constructor({ canvas, context, input, hud, levelUpUI, gameOverUI }) {
     this.renderer = new Renderer(canvas, context);
@@ -59,6 +96,7 @@ export class Game {
     this.projectiles = [];
     this.pickups = [];
     this.effects = [];
+    this.obstacles = [];
     this.weapons = [];
     this.elapsed = 0;
     this.pendingLevelUps = 0;
@@ -88,6 +126,7 @@ export class Game {
     this.projectiles = [];
     this.pickups = [];
     this.effects = [];
+    this.obstacles = this.generateObstacles();
     this.weapons = [new MagicWand()];
     this.elapsed = 0;
     this.pendingLevelUps = 0;
@@ -146,6 +185,7 @@ export class Game {
       pickup.update(dt, this.player);
     }
 
+    this.resolveObstacleCollisions();
     this.resolveCollisions();
     this.updateEffects(dt);
     this.cleanupEntities();
@@ -172,6 +212,10 @@ export class Game {
     this.renderer.clear();
     this.renderer.drawBackground(camera, this.elapsed);
 
+    for (const obstacle of this.obstacles) {
+      this.renderer.drawObstacle(obstacle, camera);
+    }
+
     for (const pickup of this.pickups) {
       this.renderer.drawPickup(pickup, camera);
     }
@@ -196,6 +240,20 @@ export class Game {
 
   resolveCollisions() {
     for (const projectile of this.projectiles) {
+      if (projectile.destroyed) {
+        continue;
+      }
+
+      for (const obstacle of this.obstacles) {
+        if (
+          obstacle.getBounds &&
+          aabbOverlap(projectile.getBounds(), obstacle.getBounds())
+        ) {
+          projectile.destroyed = true;
+          break;
+        }
+      }
+
       if (projectile.destroyed) {
         continue;
       }
@@ -260,6 +318,65 @@ export class Game {
     );
     this.enemies = this.enemies.filter((enemy) => !enemy.markedForRemoval);
     this.pickups = this.pickups.filter((pickup) => !pickup.markedForRemoval);
+  }
+
+  resolveObstacleCollisions() {
+    const pushEntities = [this.player, ...this.enemies];
+
+    for (const entity of pushEntities) {
+      if (!entity || !entity.radius) {
+        continue;
+      }
+
+      for (const obstacle of this.obstacles) {
+        const rect = obstacle.getBounds();
+        const push = pushCircleOutOfRect(entity, rect);
+        if (!push) {
+          continue;
+        }
+
+        entity.x += push.x;
+        entity.y += push.y;
+      }
+    }
+  }
+
+  generateObstacles() {
+    const obstacles = [];
+    const baseColors = ["#4a5d6c", "#556d82", "#3f5060"];
+
+    for (let index = 0; index < 10; index += 1) {
+      const angle = (index / 10) * Math.PI * 2;
+      const distance = 240 + Math.random() * 360;
+      const width = 72 + Math.random() * 80;
+      const height = 42 + Math.random() * 64;
+      const x = Math.cos(angle) * distance + (Math.random() * 120 - 60);
+      const y = Math.sin(angle) * distance + (Math.random() * 120 - 60);
+      const color = baseColors[index % baseColors.length];
+
+      obstacles.push(new Obstacle({ x, y, width, height, color }));
+    }
+
+    obstacles.push(
+      new Obstacle({
+        x: -120,
+        y: -150,
+        width: 180,
+        height: 90,
+        color: "#556d82",
+      }),
+    );
+    obstacles.push(
+      new Obstacle({
+        x: 130,
+        y: 110,
+        width: 160,
+        height: 72,
+        color: "#3f5060",
+      }),
+    );
+
+    return obstacles;
   }
 
   damageEnemy(enemy, amount) {

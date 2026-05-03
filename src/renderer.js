@@ -222,6 +222,29 @@ export class Renderer {
     this.drawCircle(screen.x, screen.y, pickup.radius, "#71f0cf");
   }
 
+  drawObstacle(obstacle, camera) {
+    const screen = this.worldToScreen(obstacle.x, obstacle.y, camera);
+    const ctx = this.context;
+    const halfWidth = obstacle.width / 2;
+    const halfHeight = obstacle.height / 2;
+
+    ctx.save();
+    ctx.fillStyle = obstacle.color;
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.08)";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.roundRect(
+      screen.x - halfWidth,
+      screen.y - halfHeight,
+      obstacle.width,
+      obstacle.height,
+      16,
+    );
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+  }
+
   drawEffect(effect, camera) {
     const ctx = this.context;
     const screen = this.worldToScreen(effect.x, effect.y, camera);
