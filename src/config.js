@@ -11,8 +11,20 @@ export const GAME_DURATION = 30 * 60;
 export const WORLD_TILE_SIZE = 96;
 export const SCREEN_SAFE_SPAWN_MARGIN = 220;
 
+function assetSprite(path) {
+  return new URL(`../assets/${path}`, import.meta.url).href;
+}
+
+export const PLAYER_SPRITE = assetSprite("player/player.svg");
+export const PLAYER_SPRITE_SCALE = 2.4;
+export const OBSTACLE_SPRITES = {
+  boulder: assetSprite("obstacles/boulder.svg"),
+  pineTall: assetSprite("trees/pine-tall.svg"),
+  pineWide: assetSprite("trees/pine-wide.svg"),
+};
+
 function enemySprite(name) {
-  return new URL(`../assets/enemies/${name}.svg`, import.meta.url).href;
+  return assetSprite(`enemies/${name}.svg`);
 }
 
 export const ENEMY_TYPES = {

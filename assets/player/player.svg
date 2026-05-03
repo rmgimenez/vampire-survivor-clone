@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="playerCloak" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#7cf2ea"/>
+      <stop offset="1" stop-color="#188186"/>
+    </linearGradient>
+    <linearGradient id="playerTunic" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#17384d"/>
+      <stop offset="1" stop-color="#09131d"/>
+    </linearGradient>
+    <linearGradient id="playerMetal" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#ffe3aa"/>
+      <stop offset="1" stop-color="#cf9943"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="32" cy="56" rx="15" ry="5" fill="#04141d" opacity=".24"/>
+  <path d="M32 8c9 0 17 7 17 16 0 5-1 8-3 12l5 13c1 3-1 5-4 4l-8-4-3 7c-1 2-4 2-5 0l-3-7-8 4c-3 1-5-1-4-4l5-13c-2-4-3-7-3-12 0-9 8-16 17-16Z" fill="url(#playerCloak)"/>
+  <path d="M23 35c4 4 10 6 18 0l-2 10c-1 6-4 9-9 9-4 0-7-3-8-9Z" fill="url(#playerTunic)"/>
+  <path d="M23 22c2-8 8-14 9-14s7 6 9 14c-2 4-5 6-9 6s-7-2-9-6Z" fill="#11495a"/>
+  <circle cx="32" cy="25" r="7.5" fill="#f4d4b7"/>
+  <path d="M25 23c1-7 8-11 14-8-2-4-5-7-8-7-5 0-9 4-10 10 0 2 1 3 4 5Z" fill="#12374a"/>
+  <circle cx="29" cy="25" r="1.3" fill="#21323d"/>
+  <circle cx="35" cy="25" r="1.3" fill="#21323d"/>
+  <path d="M28 29c3 2 5 2 8 0" stroke="#8a4f39" stroke-width="1.8" stroke-linecap="round" fill="none" opacity=".65"/>
+  <path d="M24 34c4 4 12 5 16 0" stroke="url(#playerMetal)" stroke-width="2" stroke-linecap="round" fill="none" opacity=".95"/>
+  <path d="M28 33h8l3 10H25Z" fill="#133347"/>
+  <path d="M29 34h6v6h-6Z" fill="#f8c35c" opacity=".95"/>
+  <path d="M22 38c-2 3-3 8-2 10 2-1 4-3 5-6" fill="#156877" opacity=".9"/>
+  <path d="M42 38c2 3 3 8 2 10-2-1-4-3-5-6" fill="#156877" opacity=".9"/>
+  <path d="M27 51h4l-1 6h-5Z" fill="#3a2c28"/>
+  <path d="M33 51h4l2 6h-5Z" fill="#3a2c28"/>
+  <circle cx="32" cy="40" r="2.8" fill="#6ff4ff" opacity=".35"/>
+</svg>

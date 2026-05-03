@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 192">
+  <defs>
+    <linearGradient id="pineWideLeaves" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#8bd39d"/>
+      <stop offset="1" stop-color="#2f6c41"/>
+    </linearGradient>
+    <linearGradient id="pineWideShade" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#1a5131" stop-opacity="0"/>
+      <stop offset="1" stop-color="#14311f" stop-opacity=".8"/>
+    </linearGradient>
+    <linearGradient id="pineWideTrunk" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#805837"/>
+      <stop offset="1" stop-color="#402613"/>
+    </linearGradient>
+  </defs>
+  <path d="M80 18 106 46H54Z" fill="#b7ffd0" opacity=".6"/>
+  <path d="M80 26 132 82H28Z" fill="url(#pineWideLeaves)"/>
+  <path d="M80 56 144 116H16Z" fill="#3f8454"/>
+  <path d="M80 86 152 150H8Z" fill="#2d663f"/>
+  <path d="M28 82c18 24 44 37 52 37s34-13 52-37" fill="url(#pineWideShade)" opacity=".48"/>
+  <path d="M72 138h16v34H72Z" fill="url(#pineWideTrunk)"/>
+  <path d="M66 172h28v11H66Z" fill="#462a17"/>
+  <path d="M43 98c26-14 48-14 74 0" stroke="#cbffd8" stroke-opacity=".22" stroke-width="6" stroke-linecap="round" fill="none"/>
+</svg>

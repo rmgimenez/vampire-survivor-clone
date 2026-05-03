@@ -1,11 +1,11 @@
-import { Projectile } from '../entities/projectile.js';
-import { Weapon } from './weapon.js';
+import { Projectile } from "../entities/projectile.js";
+import { Weapon } from "./weapon.js";
 
 const DAMAGE_BY_LEVEL = [16, 20, 24, 28, 34, 40, 48, 60];
 
 export class MagicWand extends Weapon {
   constructor() {
-    super('magicWand', 'Magic Wand');
+    super("magicWand", "Magic Wand");
     this.baseCooldown = 0.9;
     this.baseAmount = 1;
   }
@@ -18,10 +18,15 @@ export class MagicWand extends Weapon {
     }
 
     const amount = this.getAmount(game.player);
-    const targets = game.findNearestEnemies(game.player.x, game.player.y, amount);
+    const targets = game.findNearestEnemies(
+      game.player.x,
+      game.player.y,
+      amount,
+    );
 
     for (let index = 0; index < amount; index += 1) {
-      const target = targets[index] || game.findNearestEnemy(game.player.x, game.player.y);
+      const target =
+        targets[index] || game.findNearestEnemy(game.player.x, game.player.y);
       const angle = target
         ? Math.atan2(target.y - game.player.y, target.x - game.player.x)
         : Math.random() * Math.PI * 2;
@@ -35,9 +40,10 @@ export class MagicWand extends Weapon {
           vx: Math.cos(angle) * speed,
           vy: Math.sin(angle) * speed,
           radius,
-          damage: DAMAGE_BY_LEVEL[this.level - 1] * game.player.damageMultiplier,
+          damage:
+            DAMAGE_BY_LEVEL[this.level - 1] * game.player.damageMultiplier,
           lifetime: 2.4,
-          color: '#f8c35c',
+          color: "#f8c35c",
           pierce: this.level >= 6 ? 1 : 0,
           homing: 7 + this.level,
         }),

@@ -1,4 +1,4 @@
-import { GAME_DURATION, GAME_STATES } from "./config.js";
+import { GAME_DURATION, GAME_STATES, OBSTACLE_SPRITES } from "./config.js";
 import { applyCardWeaponSynergies, applySelectedCards } from "./cards.js";
 import { Player } from "./entities/player.js";
 import { XpOrb } from "./entities/xpOrb.js";
@@ -380,38 +380,92 @@ export class Game {
 
   generateObstacles() {
     const obstacles = [];
-    const baseColors = ["#4a5d6c", "#556d82", "#3f5060"];
+    const variants = {
+      boulder: {
+        color: "#556d82",
+        sprite: OBSTACLE_SPRITES.boulder,
+        width: 94,
+        height: 60,
+        renderWidth: 136,
+        renderHeight: 100,
+        renderBottomOffset: 34,
+        shadowWidth: 42,
+        shadowHeight: 16,
+      },
+      pineTall: {
+        color: "#315d3b",
+        sprite: OBSTACLE_SPRITES.pineTall,
+        width: 46,
+        height: 42,
+        renderWidth: 148,
+        renderHeight: 184,
+        renderBottomOffset: 30,
+        shadowWidth: 28,
+        shadowHeight: 14,
+        shadowAlpha: 0.2,
+      },
+      pineWide: {
+        color: "#446b43",
+        sprite: OBSTACLE_SPRITES.pineWide,
+        width: 62,
+        height: 46,
+        renderWidth: 174,
+        renderHeight: 166,
+        renderBottomOffset: 28,
+        shadowWidth: 34,
+        shadowHeight: 15,
+        shadowAlpha: 0.2,
+      },
+    };
+    const createObstacle = (variantKey, x, y, scale = 1) => {
+      const variant = variants[variantKey];
+      obstacles.push(
+        new Obstacle({
+          x,
+          y,
+          color: variant.color,
+          sprite: variant.sprite,
+          width: variant.width * scale,
+          height: variant.height * scale,
+          renderWidth: variant.renderWidth * scale,
+          renderHeight: variant.renderHeight * scale,
+          renderBottomOffset: variant.renderBottomOffset * scale,
+          shadowWidth: variant.shadowWidth * scale,
+          shadowHeight: variant.shadowHeight * scale,
+          shadowAlpha: variant.shadowAlpha ?? 0.24,
+        }),
+      );
+    };
+    const scenicObstacles = [
+      { variant: "pineTall", x: -230, y: -150, scale: 1.05 },
+      { variant: "pineWide", x: 225, y: -120, scale: 1 },
+      { variant: "boulder", x: -255, y: 160, scale: 1.08 },
+      { variant: "boulder", x: 235, y: 175, scale: 0.92 },
+    ];
 
-    for (let index = 0; index < 10; index += 1) {
-      const angle = (index / 10) * Math.PI * 2;
-      const distance = 240 + Math.random() * 360;
-      const width = 72 + Math.random() * 80;
-      const height = 42 + Math.random() * 64;
-      const x = Math.cos(angle) * distance + (Math.random() * 120 - 60);
-      const y = Math.sin(angle) * distance + (Math.random() * 120 - 60);
-      const color = baseColors[index % baseColors.length];
-
-      obstacles.push(new Obstacle({ x, y, width, height, color }));
+    for (const scenic of scenicObstacles) {
+      createObstacle(scenic.variant, scenic.x, scenic.y, scenic.scale);
     }
 
-    obstacles.push(
-      new Obstacle({
-        x: -120,
-        y: -150,
-        width: 180,
-        height: 90,
-        color: "#556d82",
-      }),
-    );
-    obstacles.push(
-      new Obstacle({
-        x: 130,
-        y: 110,
-        width: 160,
-        height: 72,
-        color: "#3f5060",
-      }),
-    );
+    const ringVariants = [
+      "boulder",
+      "pineTall",
+      "boulder",
+      "pineWide",
+      "boulder",
+      "pineTall",
+    ];
+
+    for (let index = 0; index < 12; index += 1) {
+      const angle = (index / 12) * Math.PI * 2;
+      const distance = 340 + Math.random() * 520;
+      const x = Math.cos(angle) * distance + (Math.random() * 160 - 80);
+      const y = Math.sin(angle) * distance + (Math.random() * 160 - 80);
+      const scale = 0.9 + Math.random() * 0.22;
+      const variant = ringVariants[index % ringVariants.length];
+
+      createObstacle(variant, x, y, scale);
+    }
 
     return obstacles;
   }

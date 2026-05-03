@@ -4,7 +4,7 @@ export class Renderer {
   constructor(canvas, context) {
     this.canvas = canvas;
     this.context = context;
-    this.enemySprites = new Map();
+    this.spriteCache = new Map();
     this.resize();
   }
 
@@ -94,7 +94,7 @@ export class Renderer {
   drawEntity(entity, camera, colorOverride) {
     const screen = this.worldToScreen(entity.x, entity.y, camera);
     const color = colorOverride || entity.color;
-    const sprite = entity.sprite ? this.getEnemySprite(entity.sprite) : null;
+    const sprite = entity.sprite ? this.getSprite(entity.sprite) : null;
 
     if (sprite?.complete && sprite.naturalWidth > 0) {
       const ctx = this.context;
@@ -143,20 +143,22 @@ export class Renderer {
     }
   }
 
-  getEnemySprite(spriteUrl) {
-    if (!this.enemySprites.has(spriteUrl)) {
+  getSprite(spriteUrl) {
+    if (!this.spriteCache.has(spriteUrl)) {
       const image = new Image();
       image.decoding = "async";
       image.src = spriteUrl;
-      this.enemySprites.set(spriteUrl, image);
+      this.spriteCache.set(spriteUrl, image);
     }
 
-    return this.enemySprites.get(spriteUrl) ?? null;
+    return this.spriteCache.get(spriteUrl) ?? null;
   }
 
   drawPlayer(player, camera) {
     const screen = this.worldToScreen(player.x, player.y, camera);
     const alpha = player.invulnerableTimer > 0 ? 0.78 : 1;
+    const sprite = player.sprite ? this.getSprite(player.sprite) : null;
+    const ctx = this.context;
 
     this.drawCircle(
       screen.x,
@@ -165,14 +167,32 @@ export class Renderer {
       "rgba(78, 205, 196, 0.18)",
       0.8,
     );
-    this.drawCircle(screen.x, screen.y, player.radius, "#4ecdc4", alpha);
+    if (sprite?.complete && sprite.naturalWidth > 0) {
+      const size = player.radius * player.spriteScale * 2;
 
-    const ctx = this.context;
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(
+        sprite,
+        screen.x - size / 2,
+        screen.y - size / 2,
+        size,
+        size,
+      );
+      ctx.restore();
+    } else {
+      this.drawCircle(screen.x, screen.y, player.radius, player.color, alpha);
+    }
+
     ctx.save();
+    ctx.globalAlpha = alpha;
     ctx.strokeStyle = "#f8f1da";
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
-    ctx.moveTo(screen.x, screen.y);
+    ctx.moveTo(
+      screen.x + player.facingX * (player.radius * 0.18),
+      screen.y + player.facingY * (player.radius * 0.18),
+    );
     ctx.lineTo(screen.x + player.facingX * 18, screen.y + player.facingY * 18);
     ctx.stroke();
     ctx.restore();
@@ -238,6 +258,34 @@ export class Renderer {
     const ctx = this.context;
     const halfWidth = obstacle.width / 2;
     const halfHeight = obstacle.height / 2;
+    const sprite = obstacle.sprite ? this.getSprite(obstacle.sprite) : null;
+
+    ctx.save();
+    ctx.globalAlpha = obstacle.shadowAlpha;
+    ctx.fillStyle = "#041119";
+    ctx.beginPath();
+    ctx.ellipse(
+      screen.x,
+      screen.y + halfHeight + 4,
+      obstacle.shadowWidth,
+      obstacle.shadowHeight,
+      0,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+    ctx.restore();
+
+    if (sprite?.complete && sprite.naturalWidth > 0) {
+      ctx.drawImage(
+        sprite,
+        screen.x - obstacle.renderWidth / 2,
+        screen.y + obstacle.renderBottomOffset - obstacle.renderHeight,
+        obstacle.renderWidth,
+        obstacle.renderHeight,
+      );
+      return;
+    }
 
     ctx.save();
     ctx.fillStyle = obstacle.color;

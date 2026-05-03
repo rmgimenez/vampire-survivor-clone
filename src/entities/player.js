@@ -1,9 +1,13 @@
+import { PLAYER_SPRITE, PLAYER_SPRITE_SCALE } from "../config.js";
+
 export class Player {
   constructor(x, y) {
     this.x = x;
     this.y = y;
     this.radius = 18;
     this.color = "#4ecdc4";
+    this.sprite = PLAYER_SPRITE;
+    this.spriteScale = PLAYER_SPRITE_SCALE;
     this.maxHealth = 100;
     this.health = 100;
     this.level = 1;

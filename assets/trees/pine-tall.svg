@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 192">
+  <defs>
+    <linearGradient id="pineTallLeaves" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#6ec08f"/>
+      <stop offset="1" stop-color="#1f5d39"/>
+    </linearGradient>
+    <linearGradient id="pineTallTrunk" x1="0" x2="0" y1="0" y2="1">
+      <stop offset="0" stop-color="#7c5635"/>
+      <stop offset="1" stop-color="#402714"/>
+    </linearGradient>
+  </defs>
+  <path d="M64 10 82 36H46Z" fill="#7fe0ad" opacity=".75"/>
+  <path d="M64 24 102 76H26Z" fill="url(#pineTallLeaves)"/>
+  <path d="M64 50 108 110H20Z" fill="#32724a"/>
+  <path d="M64 82 114 146H14Z" fill="#245a39"/>
+  <path d="M58 135h12v39H58Z" fill="url(#pineTallTrunk)"/>
+  <path d="M54 174h20v11H54Z" fill="#4a2d18"/>
+  <path d="M64 34c14 10 22 18 27 32" stroke="#d4ffe5" stroke-opacity=".3" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M37 88c19-10 44-10 55 0" stroke="#a7f0c7" stroke-opacity=".24" stroke-width="5" stroke-linecap="round" fill="none"/>
+</svg>
